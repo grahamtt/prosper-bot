@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "prosper-auto-invest"
+version = "0.1.0"
+description = ""
+authors = ["Graham Tibbitts <graham.tibbitts@gmail.com>"]
+readme = "README.md"
+packages = [{include = "prosper_auto_invest"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+requests = "^2.31.0"
+prosper-api = { path = "../prosper-api/", develop = false }
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
