@@ -9,9 +9,12 @@ packages = [{include = "prosper_auto_invest"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 requests = "^2.31.0"
-prosper-api = { path = "../prosper-api/", develop = false }
+prosper-api = {path = "../prosper-api/dist/prosper_api-0.0.1rc10+554d34f-py3-none-any.whl"}
 autohooks = "^23.7.0"
 pytz = "^2023.3.post1"
+humanize = "^4.8.0"
+backoff = "^2.2.1"
+ratelimit = "^2.2.1"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -38,3 +41,6 @@ python_functions = ["*_test", "test_*"]
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+prosper-bot="prosper_auto_invest.bot.bot:Bot.run"

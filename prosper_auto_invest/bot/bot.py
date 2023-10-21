@@ -1,6 +1,9 @@
+import argparse
 import json
 import logging
 from datetime import datetime, timedelta, tzinfo
+
+from humanize import naturaldelta
 from time import sleep
 
 import pytz
@@ -16,6 +19,18 @@ logger = logging.getLogger(__file__)
 
 class Bot:
     def __init__(self):
+        parser = argparse.ArgumentParser(
+            prog="Prosper auto-invest",
+            description="A bot that can find and invest in loans",
+        )
+        parser.add_argument(
+            "-d",
+            "--dry-run",
+            help="Do everything but actually purchase the loans",
+            action="store_true",
+        )
+        self.args = parser.parse_args()
+
         self.client = Client()
 
     def run(self):
@@ -55,18 +70,21 @@ class Bot:
             )
             logger.info(
                 f"Total value = ${total_account_value}\n"
-                f"\tNA = ${na_value} ({na_value / total_account_value}%) error: 0%\n"
-                f'\tHR = ${hr_value} ({hr_value / total_account_value}%) error: {error_vals["HR"]}\n'
-                f'\tE = ${e_value} ({e_value / total_account_value}%) error: {error_vals["E"]}\n'
-                f'\tD = ${d_value} ({d_value / total_account_value}%) error: {error_vals["D"]}\n'
-                f'\tC = ${c_value} ({c_value / total_account_value}%) error: {error_vals["C"]}\n'
-                f'\tB = ${b_value} ({b_value / total_account_value}%) error: {error_vals["B"]}\n'
-                f'\tA = ${a_value} ({a_value / total_account_value}%) error: {error_vals["A"]}\n'
-                f'\tAA = ${aa_value} ({aa_value / total_account_value}% error: {error_vals["AA"]}\n'
-                f"\tCash = ${cash} ({cash / total_account_value}%)"
+                # f"In-flight payments = ${account['inflight_gross']}\n"
+                f"Pending investments = ${account['pending_investments_primary_market']:7.2f}\n"
+                f"\tNA\t\t\t\t= ${na_value:7.2f} ({na_value / total_account_value * 100:4.2f}%) error: 0%\n"
+                f'\tHR\t\t\t\t= ${hr_value:7.2f} ({hr_value / total_account_value * 100:4.2f}%) error: {error_vals["HR"] * 100:5.4f}%\n'
+                f'\tE\t\t\t\t= ${e_value:7.2f} ({e_value / total_account_value * 100:4.2f}%) error: {error_vals["E"] * 100:5.4f}%\n'
+                f'\tD\t\t\t\t= ${d_value:7.2f} ({d_value / total_account_value * 100:4.2f}%) error: {error_vals["D"] * 100:5.4f}%\n'
+                f'\tC\t\t\t\t= ${c_value:7.2f} ({c_value / total_account_value * 100:4.2f}%) error: {error_vals["C"] * 100:5.4f}%\n'
+                f'\tB\t\t\t\t= ${b_value:7.2f} ({b_value / total_account_value * 100:4.2f}%) error: {error_vals["B"] * 100:5.4f}%\n'
+                f'\tA\t\t\t\t= ${a_value:7.2f} ({a_value / total_account_value * 100:4.2f}%) error: {error_vals["A"] * 100:5.4f}%\n'
+                f'\tAA\t\t\t\t= ${aa_value:7.2f} ({aa_value / total_account_value * 100:4.2f}%) error: {error_vals["AA"] * 100:5.4f}%\n'
+                f"\tCash\t\t\t= ${cash:7.2f} ({cash / total_account_value * 100:4.2f}%)\n"
+                f"\tPending deposit = ${account['pending_deposit']} ({account['pending_deposit']/total_account_value * 100:4.2f}%)"
             )
 
-            if cash >= 25:
+            if cash >= 25 or self.args.dry_run:
                 target_grade = errors_by_magnitude[0][0]
                 logger.info(
                     f"Enough cash available; lets buy something in grade {target_grade}"
@@ -81,25 +99,26 @@ class Bot:
                 # listings['result'].sort(key=lambda v: v['historical_return'], reverse=True)
                 logger.info(json.dumps(listings["result"][0], indent=2))
 
-                invest_amount = (cash // 25) * 25 + cash % 25
-                order_result = self.client.order(
-                    listings["result"][0]["listing_number"], invest_amount
-                )
-                logging.info(json.dumps(order_result, indent=2))
-                sleep_time = 60  # seconds
+                invest_amount = 25 + cash % 25
+                listing_number = listings["result"][0]["listing_number"]
+                if self.args.dry_run:
+                    logger.info(
+                        f"DRYRUN: Would have purchased ${invest_amount} of listing {listing_number}"
+                    )
+                else:
+                    order_result = self.client.order(listing_number, invest_amount)
+                    logging.info(json.dumps(order_result, indent=2))
+                sleep_time_delta = timedelta(seconds=60)
 
             else:
                 logger.info("Not enough cash available")
-                sleep_time = (
-                    (
-                        datetime.now(pytz.timezone("America/Denver"))
-                        + timedelta(days=1)
-                    ).replace(hour=7, minute=0, second=0, microsecond=0)
-                    - datetime.now(pytz.timezone("America/Denver"))
-                ).total_seconds()
+                now = datetime.now(pytz.timezone("America/Denver"))
+                sleep_time_delta = (now + timedelta(days=1)).replace(
+                    hour=7, minute=0, second=0, microsecond=0
+                ) - now
 
-            logger.info(f"Sleeping for {sleep_time} seconds")
-            sleep(sleep_time)
+            logger.info(f"Sleeping for {naturaldelta(sleep_time_delta)}")
+            sleep(sleep_time_delta.total_seconds())
 
             # notes = client.list_notes(limit=100)
             # logger.info(json.dumps(notes, indent=2))
