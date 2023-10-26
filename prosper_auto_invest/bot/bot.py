@@ -1,6 +1,7 @@
 import argparse
 import json
 import logging
+from collections import namedtuple
 from datetime import datetime, timedelta, tzinfo
 
 from humanize import naturaldelta
@@ -12,9 +13,23 @@ import requests
 from prosper_api.auth_token_manager import AuthTokenManager
 from prosper_api.client import Client
 from prosper_api.config import Config
+from prosper_api.models import AmountsByRating
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__file__)
+
+TARGETS = {
+    "NA": 0,
+    "HR": 0.02,
+    "E": 0.26,
+    "D": 0.23,
+    "C": 0.22,
+    "B": 0.15,
+    "A": 0.06,
+    "AA": 0.06,
+}
+
+BucketDatum = namedtuple("BucketDatum", ["value", "pct_of_total", "error_pct"])
 
 
 class Bot:
@@ -37,78 +52,81 @@ class Bot:
         while True:
             account = self.client.get_account_info()
             logger.debug(json.dumps(account, indent=2))
-            total_account_value = account["total_account_value"]
-            na_value = account["invested_notes"]["NA"] + account["pending_bids"]["NA"]
-            hr_value = account["invested_notes"]["HR"] + account["pending_bids"]["HR"]
-            e_value = account["invested_notes"]["E"] + account["pending_bids"]["E"]
-            d_value = account["invested_notes"]["D"] + account["pending_bids"]["D"]
-            c_value = account["invested_notes"]["C"] + account["pending_bids"]["C"]
-            b_value = account["invested_notes"]["B"] + account["pending_bids"]["B"]
-            a_value = account["invested_notes"]["A"] + account["pending_bids"]["A"]
-            aa_value = account["invested_notes"]["AA"] + account["pending_bids"]["AA"]
-            cash = account["available_cash_balance"]
-            targets = {
-                "HR": 0.02,
-                "E": 0.26,
-                "D": 0.23,
-                "C": 0.22,
-                "B": 0.15,
-                "A": 0.06,
-                "AA": 0.06,
-            }
-            error_vals = {
-                "HR": targets["HR"] - hr_value / total_account_value,
-                "E": targets["E"] - e_value / total_account_value,
-                "D": targets["D"] - d_value / total_account_value,
-                "C": targets["C"] - c_value / total_account_value,
-                "B": targets["B"] - b_value / total_account_value,
-                "A": targets["A"] - a_value / total_account_value,
-                "AA": targets["AA"] - aa_value / total_account_value,
-            }
-            errors_by_magnitude = sorted(
-                error_vals.items(), key=lambda v: v[1], reverse=True
+            total_account_value = account.total_account_value
+            buckets = {}
+            invested_notes = account.invested_notes._asdict()
+            pending_bids = account.pending_bids._asdict()
+            for rating in invested_notes.keys():
+                value = invested_notes[rating] + pending_bids[rating]
+                pct_of_total = value / total_account_value
+                buckets[rating] = BucketDatum(
+                    value=value,
+                    pct_of_total=pct_of_total,
+                    error_pct=TARGETS[rating] - pct_of_total,
+                )
+
+            buckets["Cash"] = BucketDatum(
+                account.available_cash_balance,
+                account.available_cash_balance / total_account_value,
+                0.0,
             )
+            buckets["Pending deposit"] = BucketDatum(
+                account.pending_deposit,
+                account.pending_deposit / total_account_value,
+                0.0,
+            )
+            buckets["Total value"] = BucketDatum(
+                total_account_value, total_account_value / total_account_value, 0.0
+            )
+
+            cash = account.available_cash_balance
+            grade_buckets_sorted_by_error_pct = sorted(
+                buckets.items(), key=lambda v: v[1].error_pct, reverse=True
+            )
+            logger.info(f"Total value = ${total_account_value}")
             logger.info(
-                f"Total value = ${total_account_value}\n"
-                # f"In-flight payments = ${account['inflight_gross']}\n"
-                f"Pending investments = ${account['pending_investments_primary_market']:7.2f}\n"
-                f"\tNA\t\t\t\t= ${na_value:7.2f} ({na_value / total_account_value * 100:4.2f}%) error: 0%\n"
-                f'\tHR\t\t\t\t= ${hr_value:7.2f} ({hr_value / total_account_value * 100:4.2f}%) error: {error_vals["HR"] * 100:5.4f}%\n'
-                f'\tE\t\t\t\t= ${e_value:7.2f} ({e_value / total_account_value * 100:4.2f}%) error: {error_vals["E"] * 100:5.4f}%\n'
-                f'\tD\t\t\t\t= ${d_value:7.2f} ({d_value / total_account_value * 100:4.2f}%) error: {error_vals["D"] * 100:5.4f}%\n'
-                f'\tC\t\t\t\t= ${c_value:7.2f} ({c_value / total_account_value * 100:4.2f}%) error: {error_vals["C"] * 100:5.4f}%\n'
-                f'\tB\t\t\t\t= ${b_value:7.2f} ({b_value / total_account_value * 100:4.2f}%) error: {error_vals["B"] * 100:5.4f}%\n'
-                f'\tA\t\t\t\t= ${a_value:7.2f} ({a_value / total_account_value * 100:4.2f}%) error: {error_vals["A"] * 100:5.4f}%\n'
-                f'\tAA\t\t\t\t= ${aa_value:7.2f} ({aa_value / total_account_value * 100:4.2f}%) error: {error_vals["AA"] * 100:5.4f}%\n'
-                f"\tCash\t\t\t= ${cash:7.2f} ({cash / total_account_value * 100:4.2f}%)\n"
-                f"\tPending deposit = ${account['pending_deposit']} ({account['pending_deposit']/total_account_value * 100:4.2f}%)"
+                f"Pending investments = ${account.pending_investments_primary_market:7.2f}"
             )
+            for key, bucket in buckets.items():
+                logger.info(
+                    f"\t{key:16}= ${bucket.value:8.2f} ({bucket.pct_of_total * 100:6.2f}%) error: {bucket.error_pct*100:6.3f}%"
+                )
 
             if cash >= 25 or self.args.dry_run:
-                target_grade = errors_by_magnitude[0][0]
-                logger.info(
-                    f"Enough cash available; lets buy something in grade {target_grade}"
-                )
-
-                listings = self.client.search_listings(
-                    limit=500,
-                    prosper_rating=[target_grade],
-                    sort_by="lender_yield",
-                    sort_dir="desc",
-                )
-                # listings['result'].sort(key=lambda v: v['historical_return'], reverse=True)
-                logger.info(json.dumps(listings["result"][0], indent=2))
-
-                invest_amount = 25 + cash % 25
-                listing_number = listings["result"][0]["listing_number"]
-                if self.args.dry_run:
+                for target_grade, bucket in grade_buckets_sorted_by_error_pct:
                     logger.info(
-                        f"DRYRUN: Would have purchased ${invest_amount} of listing {listing_number}"
+                        f"Enough cash available; searching for something in {target_grade}"
                     )
-                else:
-                    order_result = self.client.order(listing_number, invest_amount)
-                    logging.info(json.dumps(order_result, indent=2))
-                sleep_time_delta = timedelta(seconds=60)
+
+                    listings = self.client.search_listings(
+                        limit=500,
+                        prosper_rating=[target_grade],
+                        sort_by="lender_yield",
+                        sort_dir="desc",
+                    )
+
+                    if not listings["result"]:
+                        logger.info("No matching listings found")
+                        continue
+                    # listings['result'].sort(key=lambda v: v['historical_return'], reverse=True)
+                    listing = listings["result"][0]
+                    logger.debug(json.dumps(listing, indent=2))
+
+                    invest_amount = 25 + cash % 25
+                    lender_yield = listing["lender_yield"]
+                    listing_number = listing["listing_number"]
+                    if self.args.dry_run:
+                        logger.info(
+                            f"DRYRUN: Would have purchased ${invest_amount:5.2f} of listing {listing_number} at {lender_yield * 100:5.2f}%"
+                        )
+                    else:
+                        order_result = self.client.order(listing_number, invest_amount)
+                        logging.info(
+                            f"Purchased ${invest_amount:5.2f} of {listing_number} at {lender_yield * 100:5.2f}%"
+                        )
+                        logging.debug(json.dumps(order_result, indent=2))
+                    sleep_time_delta = timedelta(seconds=60)
+                    break
 
             else:
                 logger.info("Not enough cash available")
