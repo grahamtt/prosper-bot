@@ -9,12 +9,13 @@ packages = [{include = "prosper_auto_invest"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 requests = "^2.31.0"
-prosper-api = {path = "../prosper-api/dist/prosper_api-0.0.1rc10+554d34f-py3-none-any.whl"}
+prosper-api = {path = "../prosper-api/dist/prosper_api-0.0.1rc18+05fca67.dirty-py3-none-any.whl"}
 autohooks = "^23.7.0"
 pytz = "^2023.3.post1"
 humanize = "^4.8.0"
 backoff = "^2.2.1"
 ratelimit = "^2.2.1"
+keyring = "^24.2.0"
 
 
 [tool.poetry.group.dev.dependencies]

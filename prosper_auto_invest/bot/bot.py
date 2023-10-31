@@ -13,7 +13,7 @@ import requests
 from prosper_api.auth_token_manager import AuthTokenManager
 from prosper_api.client import Client
 from prosper_api.config import Config
-from prosper_api.models import AmountsByRating
+from prosper_api.models import AmountsByRating, SearchListingsRequest
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__file__)
@@ -83,7 +83,6 @@ class Bot:
             grade_buckets_sorted_by_error_pct = sorted(
                 buckets.items(), key=lambda v: v[1].error_pct, reverse=True
             )
-            logger.info(f"Total value = ${total_account_value}")
             logger.info(
                 f"Pending investments = ${account.pending_investments_primary_market:7.2f}"
             )
@@ -99,22 +98,24 @@ class Bot:
                     )
 
                     listings = self.client.search_listings(
-                        limit=500,
-                        prosper_rating=[target_grade],
-                        sort_by="lender_yield",
-                        sort_dir="desc",
+                        SearchListingsRequest(
+                            limit=500,
+                            prosper_rating=[target_grade],
+                            sort_by="lender_yield",
+                            sort_dir="desc",
+                        )
                     )
 
-                    if not listings["result"]:
+                    if not listings.result:
                         logger.info("No matching listings found")
                         continue
                     # listings['result'].sort(key=lambda v: v['historical_return'], reverse=True)
-                    listing = listings["result"][0]
+                    listing = listings.result[0]
                     logger.debug(json.dumps(listing, indent=2))
 
                     invest_amount = 25 + cash % 25
-                    lender_yield = listing["lender_yield"]
-                    listing_number = listing["listing_number"]
+                    lender_yield = listing.lender_yield
+                    listing_number = listing.listing_number
                     if self.args.dry_run:
                         logger.info(
                             f"DRYRUN: Would have purchased ${invest_amount:5.2f} of listing {listing_number} at {lender_yield * 100:5.2f}%"
