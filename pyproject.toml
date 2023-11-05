@@ -5,11 +5,17 @@ description = ""
 authors = ["Graham Tibbitts <graham.tibbitts@gmail.com>"]
 readme = "README.md"
 packages = [{include = "prosper_auto_invest"}]
+classifiers = [
+    "Programming Language :: Python :: 3 :: Only",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Topic :: Office/Business :: Financial :: Investment",
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
 requests = "^2.31.0"
-prosper-api = {path = "../prosper-api/dist/prosper_api-0.0.1rc29+aea5b69-py3-none-any.whl"}
+prosper-api = "^0.1.0"
 autohooks = "^23.7.0"
 pytz = "^2023.3.post1"
 humanize = "^4.8.0"

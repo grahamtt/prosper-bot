@@ -97,10 +97,9 @@ class Bot:
                 )
 
             if cash >= 25 or self.args.dry_run:
+                logger.info("Enough cash is available; searching for loans...")
                 for target_grade, bucket in grade_buckets_sorted_by_error_pct:
-                    logger.info(
-                        f"Enough cash available; searching for something in {target_grade}"
-                    )
+                    logger.info(f"Searching for something in grade {target_grade}...")
 
                     listings = self.client.search_listings(
                         SearchListingsRequest(
@@ -111,10 +110,12 @@ class Bot:
                         )
                     )
 
-                    if not listings.result:
-                        logger.info("No matching listings found")
+                    if listings.result_count == 0:
+                        logger.info(
+                            f"No matching listings found for grade {target_grade}"
+                        )
                         continue
-                    # listings['result'].sort(key=lambda v: v['historical_return'], reverse=True)
+
                     listing = listings.result[0]
                     logger.debug(json.dumps(listing, indent=2))
 
@@ -131,19 +132,14 @@ class Bot:
                             f"Purchased ${invest_amount:5.2f} of {listing_number} at {lender_yield * 100:5.2f}%"
                         )
                         logging.debug(json.dumps(order_result, indent=2))
-                    sleep_time_delta = timedelta(seconds=5)
                     break
+                # Set the sleep time here in case of no matching listings being found (highly unlikely).
+                sleep_time_delta = timedelta(seconds=5)
             else:
                 sleep_time_delta = POLL_TIME
                 logger.info(f"Starting polling every {naturaldelta(sleep_time_delta)}")
 
             sleep(sleep_time_delta.total_seconds())
-
-            # notes = client.list_notes(limit=100)
-            # logger.info(json.dumps(notes, indent=2))
-            #
-            # listing = client.search_listings(listing_number=["13201299"], invested=True, biddable=False)
-            # logger.info(json.dumps(listing, indent=2))
 
 
 def do_run():
