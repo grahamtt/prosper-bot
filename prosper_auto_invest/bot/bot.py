@@ -146,5 +146,9 @@ class Bot:
             # logger.info(json.dumps(listing, indent=2))
 
 
-if __name__ == "__main__":
+def do_run():
     Bot().run()
+
+
+if __name__ == "__main__":
+    do_run()
