@@ -924,12 +924,12 @@ tomlkit = ">=0.5.11"
 
 [[package]]
 name = "prosper-api"
-version = "0.0.1rc18+05fca67.dirty"
+version = "0.0.1rc29+aea5b69"
 description = "Python trading library for Prosper.com"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "prosper_api-0.0.1rc18+05fca67.dirty-py3-none-any.whl", hash = "sha256:39e09af9727389fed6ff532e211f64a574ed8ef90b2da29be8d7d443f34452ae"},
+    {file = "prosper_api-0.0.1rc29+aea5b69-py3-none-any.whl", hash = "sha256:0bbe9d3c9c366004ae39db966211f06f37613e4c463232d3747085430b7e1272"},
 ]
 
 [package.dependencies]
@@ -942,7 +942,7 @@ toml = ">=0.10.2,<0.11.0"
 
 [package.source]
 type = "file"
-url = "../prosper-api/dist/prosper_api-0.0.1rc18+05fca67.dirty-py3-none-any.whl"
+url = "../prosper-api/dist/prosper_api-0.0.1rc29+aea5b69-py3-none-any.whl"
 
 [[package]]
 name = "pycparser"
@@ -1285,4 +1285,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "a3c2d04f4a9fdae46c0c9234b25ae996522c02421c837b83c9f984e9c7cf3186"
+content-hash = "7457ecb2ca9ab214a173f6d9240f30f50dc6e929cca18633f38f5cd832bc3a4d"

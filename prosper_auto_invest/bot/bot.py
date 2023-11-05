@@ -18,6 +18,7 @@ from prosper_api.models import AmountsByRating, SearchListingsRequest
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__file__)
 
+POLL_TIME = timedelta(minutes=1)
 TARGETS = {
     "NA": 0,
     "HR": 0.02,
@@ -45,13 +46,17 @@ class Bot:
             action="store_true",
         )
         self.args = parser.parse_args()
-
-        self.client = Client()
+        self.config = Config()
+        self.client = Client(config=self.config)
 
     def run(self):
+        cash = 0
         while True:
             account = self.client.get_account_info()
             logger.debug(json.dumps(account, indent=2))
+            if cash == account.available_cash_balance:
+                sleep(POLL_TIME.total_seconds())
+                continue
             total_account_value = account.total_account_value
             buckets = {}
             invested_notes = account.invested_notes._asdict()
@@ -126,17 +131,12 @@ class Bot:
                             f"Purchased ${invest_amount:5.2f} of {listing_number} at {lender_yield * 100:5.2f}%"
                         )
                         logging.debug(json.dumps(order_result, indent=2))
-                    sleep_time_delta = timedelta(seconds=60)
+                    sleep_time_delta = timedelta(seconds=5)
                     break
-
             else:
-                logger.info("Not enough cash available")
-                now = datetime.now(pytz.timezone("America/Denver"))
-                sleep_time_delta = (now + timedelta(days=1)).replace(
-                    hour=7, minute=0, second=0, microsecond=0
-                ) - now
+                sleep_time_delta = POLL_TIME
+                logger.info(f"Starting polling every {naturaldelta(sleep_time_delta)}")
 
-            logger.info(f"Sleeping for {naturaldelta(sleep_time_delta)}")
             sleep(sleep_time_delta.total_seconds())
 
             # notes = client.list_notes(limit=100)

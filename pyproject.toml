@@ -9,7 +9,7 @@ packages = [{include = "prosper_auto_invest"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 requests = "^2.31.0"
-prosper-api = {path = "../prosper-api/dist/prosper_api-0.0.1rc18+05fca67.dirty-py3-none-any.whl"}
+prosper-api = {path = "../prosper-api/dist/prosper_api-0.0.1rc29+aea5b69-py3-none-any.whl"}
 autohooks = "^23.7.0"
 pytz = "^2023.3.post1"
 humanize = "^4.8.0"
