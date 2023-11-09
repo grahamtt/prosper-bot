@@ -3,6 +3,7 @@ import json
 import logging
 from collections import namedtuple
 from datetime import datetime, timedelta, tzinfo
+from decimal import Decimal, ROUND_DOWN
 
 from humanize import naturaldelta
 from time import sleep
@@ -20,14 +21,14 @@ logger = logging.getLogger(__file__)
 
 POLL_TIME = timedelta(minutes=1)
 TARGETS = {
-    "NA": 0,
-    "HR": 0.02,
-    "E": 0.26,
-    "D": 0.23,
-    "C": 0.22,
-    "B": 0.15,
-    "A": 0.06,
-    "AA": 0.06,
+    "NA": Decimal("0"),
+    "HR": Decimal("0.02"),
+    "E": Decimal("0.26"),
+    "D": Decimal("0.23"),
+    "C": Decimal("0.22"),
+    "B": Decimal("0.15"),
+    "A": Decimal("0.06"),
+    "AA": Decimal("0.06"),
 }
 
 BucketDatum = namedtuple("BucketDatum", ["value", "pct_of_total", "error_pct"])
@@ -54,15 +55,16 @@ class Bot:
         while True:
             account = self.client.get_account_info()
             logger.debug(json.dumps(account, indent=2))
-            if cash == account.available_cash_balance:
+            new_cash = to_dollars(account.available_cash_balance)
+            if cash == new_cash:
                 sleep(POLL_TIME.total_seconds())
                 continue
-            total_account_value = account.total_account_value
+            total_account_value = to_dollars(account.total_account_value)
             buckets = {}
             invested_notes = account.invested_notes._asdict()
             pending_bids = account.pending_bids._asdict()
             for rating in invested_notes.keys():
-                value = invested_notes[rating] + pending_bids[rating]
+                value = to_dollars(invested_notes[rating] + pending_bids[rating])
                 pct_of_total = value / total_account_value
                 buckets[rating] = BucketDatum(
                     value=value,
@@ -70,21 +72,21 @@ class Bot:
                     error_pct=TARGETS[rating] - pct_of_total,
                 )
 
+            cash = new_cash
             buckets["Cash"] = BucketDatum(
-                account.available_cash_balance,
-                account.available_cash_balance / total_account_value,
+                cash,
+                cash / total_account_value,
                 0.0,
             )
             buckets["Pending deposit"] = BucketDatum(
-                account.pending_deposit,
-                account.pending_deposit / total_account_value,
+                to_dollars(account.pending_deposit),
+                to_dollars(account.pending_deposit) / total_account_value,
                 0.0,
             )
             buckets["Total value"] = BucketDatum(
                 total_account_value, total_account_value / total_account_value, 0.0
             )
 
-            cash = account.available_cash_balance
             grade_buckets_sorted_by_error_pct = sorted(
                 buckets.items(), key=lambda v: v[1].error_pct, reverse=True
             )
@@ -144,6 +146,10 @@ class Bot:
 
 def do_run():
     Bot().run()
+
+
+def to_dollars(val: float) -> Decimal:
+    return Decimal(val).quantize(Decimal("0.01"), rounding=ROUND_DOWN)
 
 
 if __name__ == "__main__":
