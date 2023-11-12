@@ -1,5 +1,5 @@
 import argparse
-import json
+import simplejson as json
 import logging
 from collections import namedtuple
 from datetime import datetime, timedelta, tzinfo
