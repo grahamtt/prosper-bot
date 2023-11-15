@@ -16,7 +16,9 @@ from prosper_api.client import Client
 from prosper_api.config import Config
 from prosper_api.models import AmountsByRating, SearchListingsRequest
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    format="%(asctime)s %(levelname)-8s %(message)s", level=logging.INFO
+)
 logger = logging.getLogger(__file__)
 
 POLL_TIME = timedelta(minutes=1)
@@ -105,7 +107,9 @@ class Bot:
 
                     listings = self.client.search_listings(
                         SearchListingsRequest(
-                            limit=500,
+                            limit=10,
+                            biddable=True,
+                            invested=False,
                             prosper_rating=[target_grade],
                             sort_by="lender_yield",
                             sort_dir="desc",
