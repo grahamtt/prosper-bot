@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "prosper-bot"
-version = "0.0.1-pre.16"
+version = "0.1.0"
 description = ""
 authors = ["Graham Tibbitts <graham.tibbitts@gmail.com>"]
 readme = "README.md"
