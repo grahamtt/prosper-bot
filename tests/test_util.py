@@ -1,6 +1,6 @@
 import pytest
 
-from prosper_auto_invest.util import bucketize
+from prosper_bot.util import bucketize
 
 
 class TestUtils:

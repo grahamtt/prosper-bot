@@ -1,20 +1,15 @@
 import argparse
-import simplejson as json
 import logging
 from collections import namedtuple
-from datetime import datetime, timedelta, tzinfo
-from decimal import Decimal, ROUND_DOWN
-
-from humanize import naturaldelta
+from datetime import timedelta
+from decimal import ROUND_DOWN, Decimal
 from time import sleep
 
-import pytz
-import requests
-
-from prosper_api.auth_token_manager import AuthTokenManager
+import simplejson as json
+from humanize import naturaldelta
 from prosper_api.client import Client
 from prosper_api.config import Config
-from prosper_api.models import AmountsByRating, SearchListingsRequest
+from prosper_api.models import SearchListingsRequest
 
 logging.basicConfig(
     format="%(asctime)s %(levelname)-8s %(message)s", level=logging.INFO
@@ -37,7 +32,10 @@ BucketDatum = namedtuple("BucketDatum", ["value", "pct_of_total", "error_pct"])
 
 
 class Bot:
+    """Prosper trading bot."""
+
     def __init__(self):
+        """Initializes the bot with the given argument values."""
         parser = argparse.ArgumentParser(
             prog="Prosper auto-invest",
             description="A bot that can find and invest in loans",
@@ -53,6 +51,7 @@ class Bot:
         self.client = Client(config=self.config)
 
     def run(self):
+        """Main loop for the trading bot."""
         cash = 0
         while True:
             cash, sleep_time_delta = self._do_run(cash)
@@ -62,15 +61,15 @@ class Bot:
     def _do_run(self, cash):
         account = self.client.get_account_info()
         logger.debug(json.dumps(account, indent=2))
-        new_cash = to_dollars(account.available_cash_balance)
+        new_cash = _to_dollars(account.available_cash_balance)
         if cash == new_cash:
             return cash, POLL_TIME
-        total_account_value = to_dollars(account.total_account_value)
+        total_account_value = _to_dollars(account.total_account_value)
         buckets = {}
         invested_notes = account.invested_notes._asdict()
         pending_bids = account.pending_bids._asdict()
         for rating in invested_notes.keys():
-            value = to_dollars(invested_notes[rating] + pending_bids[rating])
+            value = _to_dollars(invested_notes[rating] + pending_bids[rating])
             pct_of_total = value / total_account_value
             buckets[rating] = BucketDatum(
                 value=value,
@@ -85,8 +84,8 @@ class Bot:
             0.0,
         )
         buckets["Pending deposit"] = BucketDatum(
-            to_dollars(account.pending_deposit),
-            to_dollars(account.pending_deposit) / total_account_value,
+            _to_dollars(account.pending_deposit),
+            _to_dollars(account.pending_deposit) / total_account_value,
             0.0,
         )
         buckets["Total value"] = BucketDatum(
@@ -150,11 +149,12 @@ class Bot:
         return cash, sleep_time_delta
 
 
-def to_dollars(val: float) -> Decimal:
+def _to_dollars(val: float) -> Decimal:
     return Decimal(val).quantize(Decimal("0.01"), rounding=ROUND_DOWN)
 
 
 def runner():
+    """Entry-point for Python script."""
     Bot().run()
 
 

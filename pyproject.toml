@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "prosper-auto-invest"
-version = "0.1.0"
+name = "prosper-bot"
+version = "0.0.1-pre.16"
 description = ""
 authors = ["Graham Tibbitts <graham.tibbitts@gmail.com>"]
 readme = "README.md"
-packages = [{include = "prosper_auto_invest"}]
+packages = [{include = "prosper_bot"}]
 classifiers = [
     "Programming Language :: Python :: 3 :: Only",
     "License :: OSI Approved :: Apache Software License",
@@ -32,22 +32,79 @@ pytest-sugar = "^0.9.7"
 autohooks = "^23.7.0"
 autohooks-plugin-black = "^23.7.0"
 autohooks-plugin-pytest = "^23.4.0"
+prosper-shared = "^0.1.4"
 
 [tool.autohooks]
 mode = "poetry"
-pre-commit = ["autohooks.plugins.black", "autohooks.plugins.pytest"]
+pre-commit = [
+    "prosper_shared.autohooks.autoimport",
+    "autohooks.plugins.black",
+    "autohooks.plugins.ruff",
+    "autohooks.plugins.isort",
+    "prosper_shared.autohooks.pydocstyle",
+    "prosper_shared.autohooks.pydoclint",
+    "prosper_shared.autohooks.tomlsort",
+    "prosper_shared.autohooks.mdformat",
+    "autohooks.plugins.pytest",
+    # "autohooks.tox", # Commenting out for now because it appears to be running only for Python 3.10
+    # "prosper_shared.autohooks.mutmut", # Commenting out for now since it fails even with the --CI flag
+    "prosper_shared.autohooks.dynamic_versioning",
+]
 
-[tool.autohooks.plugins.tox]
-arguments = "-s"
+[tool.autohooks.plugins.mutmut]
+arguments = [
+    "--CI",
+]
+
+[tool.autohooks.plugins.pydoclint]
+include = 'prosper_bot/*.py'
+
+[tool.autohooks.plugins.pydocstyle]
+include = 'prosper_bot/*.py'
+
+[tool.autohooks.plugins.ruff]
+arguments = '--fix'
+
+[tool.isort]
+profile = "black"
+
+[tool.mutmut]
+disable-mutation-types = "string,fstring,expr_stmt,annassign,number"
+
+[tool.poetry-dynamic-versioning]
+enable = true
+metadata = false
+style = "semver"
+vcs = "git"
+bump = true
+
+[tool.pydoclint]
+style = "google"
+allow-init-docstring = true
+
+[tool.pydocstyle]
+inherit = false
+convention = "google"
+add_ignore = ['D100', 'D104']
 
 [tool.pytest.ini_options]
-addopts = "--cov=prosper_auto_invest --cov-report=term-missing --cov-fail-under=0"
+addopts = "--cov=prosper_api --cov-report=term-missing --cov-report=lcov:dist/coverage.info --cov-fail-under=0"
 testpaths = "tests"
 python_functions = ["*_test", "test_*"]
+
+[tool.ruff.lint]
+extend-ignore = ["E501"]
+fixable = ["ALL"]
+unfixable = []
+
+[tool.tomlsort]
+trailing_comma_inline_array = true
+spaces_indent_inline_array = 4
+sort_first = ["tool.poetry"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-prosper-bot="prosper_auto_invest.bot.bot:runner"
+prosper-bot="prosper_bot.bot.bot:runner"
