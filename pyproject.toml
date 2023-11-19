@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "prosper-bot"
-version = "0.1.0"
+version = "0.0.1-pre.18"
 description = ""
 authors = ["Graham Tibbitts <graham.tibbitts@gmail.com>"]
 readme = "README.md"
@@ -88,7 +88,7 @@ convention = "google"
 add_ignore = ['D100', 'D104']
 
 [tool.pytest.ini_options]
-addopts = "--cov=prosper_api --cov-report=term-missing --cov-report=lcov:dist/coverage.info --cov-fail-under=0"
+addopts = "--cov=prosper_bot --cov-report=term-missing --cov-report=lcov:dist/coverage.info --cov-fail-under=0"
 testpaths = "tests"
 python_functions = ["*_test", "test_*"]
 
