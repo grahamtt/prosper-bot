@@ -50,4 +50,4 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-prosper-bot="prosper_auto_invest.bot.bot:do_run"
+prosper-bot="prosper_auto_invest.bot.bot:runner"
