@@ -1245,13 +1245,13 @@ files = [
 
 [[package]]
 name = "prosper-api"
-version = "0.5.8"
+version = "0.5.9"
 description = "Python trading library for Prosper.com"
 optional = false
-python-versions = ">3.9,<4.0"
+python-versions = ">=3.9,<4.0"
 files = [
-    {file = "prosper_api-0.5.8-py3-none-any.whl", hash = "sha256:26c517c027fcf07c52576f34e3b0702de4bdf605b54f5b5e13e02f5ecfdb52b2"},
-    {file = "prosper_api-0.5.8.tar.gz", hash = "sha256:299e313dfe90ab074381e436f1af3fb7ac6db04722cf15c1b9bec578f5c586f3"},
+    {file = "prosper_api-0.5.9-py3-none-any.whl", hash = "sha256:82abbade804a1f2d05d1e5e1ab2f4011b3aaf628636ce944bed61c488dde3a7c"},
+    {file = "prosper_api-0.5.9.tar.gz", hash = "sha256:0025f4360d4d23d3a0f8450acf4a6f144d157931ecb6762245d862f321294558"},
 ]
 
 [package.dependencies]
@@ -1270,13 +1270,13 @@ secure = ["keyring (>=24.2.0,<25.0.0)"]
 
 [[package]]
 name = "prosper-shared"
-version = "0.1.10"
+version = "0.1.11"
 description = ""
 optional = false
-python-versions = ">3.9,<4.0"
+python-versions = ">=3.9,<4.0"
 files = [
-    {file = "prosper_shared-0.1.10-py3-none-any.whl", hash = "sha256:af46cb01453b5b87c89f287e69066762139274d44a76a7168c12e9437b9e08af"},
-    {file = "prosper_shared-0.1.10.tar.gz", hash = "sha256:e2a4583d9510e433f3a31b2bb4a0b25df49de782b9ba8792007a809fafca0b23"},
+    {file = "prosper_shared-0.1.11-py3-none-any.whl", hash = "sha256:599ce443f74e6d01f167efcc4c57f114d35aaf7487e316d7195a63b5b66b7bc5"},
+    {file = "prosper_shared-0.1.11.tar.gz", hash = "sha256:0cb76df1777ba98c3bf5cecd91c068c8e7e4aca7e2365630194052e1c8344149"},
 ]
 
 [package.dependencies]
@@ -2010,5 +2010,5 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 
 [metadata]
 lock-version = "2.0"
-python-versions = ">3.9,<4.0"
-content-hash = "d9f0a5e47707d2b6c98a03d2e47fc61f3c7602fc627fcbd2d3fa752a4e6aae46"
+python-versions = ">=3.9,<4.0"
+content-hash = "1a40019866839a9a35db2da26407af9643a9c23aaee0996d7ef6aa49644d0571"
