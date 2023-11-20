@@ -52,7 +52,7 @@ class Bot:
 
     def run(self):
         """Main loop for the trading bot."""
-        cash = 0
+        cash = None
         while True:
             cash, sleep_time_delta = self._do_run(cash)
 
@@ -60,7 +60,7 @@ class Bot:
 
     def _do_run(self, cash):
         account = self.client.get_account_info()
-        logger.debug(json.dumps(account, indent=2))
+        logger.debug(json.dumps(account, indent=2, default=str))
         new_cash = _to_dollars(account.available_cash_balance)
         if cash == new_cash:
             return cash, POLL_TIME
@@ -124,7 +124,7 @@ class Bot:
                     continue
 
                 listing = listings.result[0]
-                logger.debug(json.dumps(listing, indent=2))
+                logger.debug(json.dumps(listing, indent=2, default=str))
 
                 invest_amount = self._get_bid_amount(cash)
                 lender_yield = listing.lender_yield
@@ -138,7 +138,7 @@ class Bot:
                     logging.info(
                         f"Purchased ${invest_amount:5.2f} of {listing_number} at {lender_yield * 100:5.2f}%"
                     )
-                    logging.debug(json.dumps(order_result, indent=2))
+                    logging.debug(json.dumps(order_result, indent=2, default=str))
                 break
             # Set the sleep time here in case of no matching listings being found (highly unlikely).
             sleep_time_delta = timedelta(seconds=5)
