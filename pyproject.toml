@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "prosper-bot"
-version = "0.1.1"
+version = "0.1.2"
 description = ""
 authors = ["Graham Tibbitts <graham.tibbitts@gmail.com>"]
 readme = "README.md"
@@ -13,7 +13,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">3.9,<4.0"
 requests = "^2.31.0"
 prosper-api = {version = "^0.4.0", extras = ["secure"]}
 autohooks = "^23.7.0"
@@ -25,14 +25,7 @@ simplejson = "^3.19.2"
 
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.4.2"
-pytest-cov = "^4.1.0"
-pytest-mock = "^3.11.1"
-pytest-sugar = "^0.9.7"
-autohooks = "^23.7.0"
-autohooks-plugin-black = "^23.7.0"
-autohooks-plugin-pytest = "^23.4.0"
-prosper-shared = "^0.1.4"
+prosper-shared = "^0.1.10"
 
 [tool.autohooks]
 mode = "poetry"
