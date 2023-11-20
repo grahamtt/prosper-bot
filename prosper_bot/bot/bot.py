@@ -126,7 +126,7 @@ class Bot:
                 listing = listings.result[0]
                 logger.debug(json.dumps(listing, indent=2))
 
-                invest_amount = 25 + cash % 25
+                invest_amount = self._get_bid_amount(cash)
                 lender_yield = listing.lender_yield
                 listing_number = listing.listing_number
                 if self.args.dry_run:
@@ -147,6 +147,12 @@ class Bot:
             logger.info(f"Starting polling every {naturaldelta(sleep_time_delta)}")
 
         return cash, sleep_time_delta
+
+    @staticmethod
+    def _get_bid_amount(cash):
+        if cash < 25:
+            return None
+        return 25 + cash % 25
 
 
 def _to_dollars(val: float) -> Decimal:
