@@ -8,6 +8,7 @@ Bot to automatically invest in prosper.com
 ![PyPI - License](https://img.shields.io/pypi/l/prosper-bot)
 [![Code Climate coverage](https://img.shields.io/codeclimate/coverage/grahamtt/prosper-bot?logo=codeclimate)](https://codeclimate.com/github/grahamtt/prosper-bot)
 [![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability-percentage/grahamtt/prosper-bot?logo=codeclimate)](https://codeclimate.com/github/grahamtt/prosper-bot)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8107/badge)](https://www.bestpractices.dev/projects/8107)
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/grahamtt/prosper-bot?logo=github)
 ![GitHub issues](https://img.shields.io/github/issues-raw/grahamtt/prosper-bot?logo=github)
 
