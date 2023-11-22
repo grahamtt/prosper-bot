@@ -77,6 +77,10 @@ class Bot:
                 error_pct=TARGETS[rating] - pct_of_total,
             )
 
+        grade_buckets_sorted_by_error_pct = sorted(
+            buckets.items(), key=lambda v: v[1].error_pct, reverse=True
+        )
+
         cash = new_cash
         buckets["Cash"] = BucketDatum(
             cash,
@@ -92,9 +96,6 @@ class Bot:
             total_account_value, total_account_value / total_account_value, 0.0
         )
 
-        grade_buckets_sorted_by_error_pct = sorted(
-            buckets.items(), key=lambda v: v[1].error_pct, reverse=True
-        )
         logger.info(
             f"Pending investments = ${account.pending_investments_primary_market:7.2f}"
         )
