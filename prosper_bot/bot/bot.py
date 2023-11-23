@@ -19,6 +19,7 @@ logger = logging.getLogger(__file__)
 
 DRY_RUN_CONFIG = "bot.dry_run"
 VERBOSE_CONFIG = "bot.verbose"
+MIN_BID_CONFIG = "bot.min_bid"
 
 POLL_TIME = timedelta(minutes=1)
 TARGETS = {
@@ -46,6 +47,7 @@ class Bot:
 
         self.client = Client(config=self.config)
         self.dry_run = self.config.get_as_bool(DRY_RUN_CONFIG)
+        self.min_bid = self.config.get_as_decimal(MIN_BID_CONFIG, Decimal(25.00))
 
     def run(self):
         """Main loop for the trading bot."""
@@ -101,7 +103,7 @@ class Bot:
                 f"\t{key:16}= ${bucket.value:8.2f} ({bucket.pct_of_total * 100:6.2f}%) error: {bucket.error_pct * 100:6.3f}%"
             )
 
-        invest_amount = self._get_bid_amount(cash)
+        invest_amount = self._get_bid_amount(cash, self.min_bid)
         if invest_amount or self.dry_run:
             logger.info("Enough cash is available; searching for loans...")
             for target_grade, bucket in grade_buckets_sorted_by_error_pct:
@@ -147,10 +149,10 @@ class Bot:
         return cash, sleep_time_delta
 
     @staticmethod
-    def _get_bid_amount(cash):
-        if cash < 25:
+    def _get_bid_amount(cash, min_bid):
+        if cash < min_bid:
             return 0
-        return 25 + cash % 25
+        return min_bid + cash % min_bid
 
 
 def _to_dollars(val: float) -> Decimal:

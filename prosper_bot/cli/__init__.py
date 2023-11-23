@@ -1,5 +1,6 @@
 import argparse
 import os
+from decimal import Decimal
 from os import getcwd
 from os.path import join
 from typing import Dict, List, Union
@@ -24,7 +25,7 @@ def build_config():
 
     confs = [c.read() for c in conf_sources]
 
-    conf = {}
+    conf = {"bot": {"min_bid": "25.00"}}
 
     for partial_conf in confs:
         always_merger.merge(conf, partial_conf)
@@ -163,6 +164,15 @@ def _arg_parser():
         help="Print out verbose messages during trading loop",
         action="store_true",
     )
+    parser.add_argument(
+        "-b",
+        "--min-bid",
+        dest="bot__min_bid",
+        help="Minimum bid amount. Must be greater than or equal to 25",
+        type=Decimal,
+        default=Decimal("25"),
+    )
+
     cred_group = parser.add_argument_group(
         "credentials",
     )

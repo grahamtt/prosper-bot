@@ -1276,13 +1276,13 @@ files = [
 
 [[package]]
 name = "prosper-api"
-version = "0.5.13"
+version = "0.5.14"
 description = "Python trading library for Prosper.com"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "prosper_api-0.5.13-py3-none-any.whl", hash = "sha256:7d4966a79eadda1b289a745b323a5ab7e7192cd7d13a4a97bf7c917d747f2ec7"},
-    {file = "prosper_api-0.5.13.tar.gz", hash = "sha256:4c6a78dc6f44cfc440fb5e593672f7db844c2a9fa9a75be803077d0be280149e"},
+    {file = "prosper_api-0.5.14-py3-none-any.whl", hash = "sha256:53adb1159d07e60d0fa09815a13ace53aabe54846da81d155255c08ba0f4f6d8"},
+    {file = "prosper_api-0.5.14.tar.gz", hash = "sha256:8ff7a05c987faf572e9eb0760059131a816e2a9c64510718c15ecd54ea71b70d"},
 ]
 
 [package.dependencies]
@@ -2042,4 +2042,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0"
-content-hash = "1b7d6987ac417e246658929cc0137c07430f0e3c2fd651befe28e8130862d6c5"
+content-hash = "d366fd8c7d7c033fe4ef6b2fcc3c34dd142fa6e7932c688ef9b721ec0928d9a6"
