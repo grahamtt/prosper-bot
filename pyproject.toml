@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "prosper-bot"
-version = "0.1.7"
+version = "0.1.8-pre.1"
 description = ""
 authors = ["Graham Tibbitts <graham.tibbitts@gmail.com>"]
 readme = "README.md"
@@ -14,13 +14,15 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
-prosper-api = {version = "^0.5.9", extras = ["secure"]}
+prosper-api = {version = "^0.5.13", extras = ["secure"]}
 pytz = "^2023.3.post1"
 humanize = "^4.8.0"
 backoff = "^2.2.1"
 ratelimit = "^2.2.1"
 simplejson = "^3.19.2"
 black = "^23.11.0"
+merge-conf = {extras = ["toml"], version = "^0.9.0"}
+deepmerge = "^1.1.0"
 
 
 [tool.poetry.group.dev.dependencies]

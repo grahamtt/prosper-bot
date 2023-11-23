@@ -1,4 +1,3 @@
-import argparse
 import logging
 from collections import namedtuple
 from datetime import timedelta
@@ -11,10 +10,15 @@ from prosper_api.client import Client
 from prosper_api.config import Config
 from prosper_api.models import SearchListingsRequest
 
+from prosper_bot.cli import build_config
+
 logging.basicConfig(
     format="%(asctime)s %(levelname)-8s %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__file__)
+
+DRY_RUN_CONFIG = "bot.dry_run"
+VERBOSE_CONFIG = "bot.verbose"
 
 POLL_TIME = timedelta(minutes=1)
 TARGETS = {
@@ -36,19 +40,12 @@ class Bot:
 
     def __init__(self):
         """Initializes the bot with the given argument values."""
-        parser = argparse.ArgumentParser(
-            prog="Prosper auto-invest",
-            description="A bot that can find and invest in loans",
-        )
-        parser.add_argument(
-            "-d",
-            "--dry-run",
-            help="Do everything but actually purchase the loans",
-            action="store_true",
-        )
-        self.args = parser.parse_args()
-        self.config = Config()
+        self.config = Config(config_dict=build_config())
+        if self.config.get_as_bool(VERBOSE_CONFIG):
+            logger.setLevel(logging.DEBUG)
+
         self.client = Client(config=self.config)
+        self.dry_run = self.config.get_as_bool(DRY_RUN_CONFIG)
 
     def run(self):
         """Main loop for the trading bot."""
@@ -104,7 +101,8 @@ class Bot:
                 f"\t{key:16}= ${bucket.value:8.2f} ({bucket.pct_of_total * 100:6.2f}%) error: {bucket.error_pct * 100:6.3f}%"
             )
 
-        if cash >= 25 or self.args.dry_run:
+        invest_amount = self._get_bid_amount(cash)
+        if invest_amount or self.dry_run:
             logger.info("Enough cash is available; searching for loans...")
             for target_grade, bucket in grade_buckets_sorted_by_error_pct:
                 logger.info(f"Searching for something in grade {target_grade}...")
@@ -127,10 +125,9 @@ class Bot:
                 listing = listings.result[0]
                 logger.debug(json.dumps(listing, indent=2, default=str))
 
-                invest_amount = self._get_bid_amount(cash)
                 lender_yield = listing.lender_yield
                 listing_number = listing.listing_number
-                if self.args.dry_run:
+                if self.dry_run:
                     logger.info(
                         f"DRYRUN: Would have purchased ${invest_amount:5.2f} of listing {listing_number} at {lender_yield * 100:5.2f}%"
                     )
@@ -152,7 +149,7 @@ class Bot:
     @staticmethod
     def _get_bid_amount(cash):
         if cash < 25:
-            return None
+            return 0
         return 25 + cash % 25
 
 

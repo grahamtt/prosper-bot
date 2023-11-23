@@ -9,8 +9,8 @@ class TestBot:
     @pytest.mark.parametrize(
         ["input", "expected_output"],
         [
-            (Decimal("0"), None),
-            (Decimal("24.99"), None),
+            (Decimal("0"), 0),
+            (Decimal("24.99"), 0),
             (Decimal("25.00"), Decimal("25.00")),
             (Decimal("25.01"), Decimal("25.01")),
             (Decimal("49.99"), Decimal("49.99")),
