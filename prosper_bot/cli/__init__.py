@@ -1,14 +1,17 @@
 import argparse
-import os
 from decimal import Decimal
 from os import getcwd
 from os.path import join
-from typing import Dict, List, Union
+from typing import List
 
 from deepmerge import always_merger
-from merge_conf import ConfigurationSource
-from merge_conf.toml import TomlConfigurationSource
 from prosper_api.config import Config
+from prosper_shared.omni_config.parse import (
+    ArgParseSource,
+    ConfigurationSource,
+    EnvironmentVariableSource,
+    TomlConfigurationSource,
+)
 
 
 def build_config():
@@ -18,9 +21,9 @@ def build_config():
     conf_sources: List[ConfigurationSource] = [
         TomlConfigurationSource(config_path),
         TomlConfigurationSource(join(getcwd(), ".prosper-api.toml")),
-        _MyEnvironmentVariableSource("PROSPER_API", separator="__"),
-        _MyEnvironmentVariableSource("PROSPER_BOT", separator="__"),
-        _MyArgParseSource(_arg_parser()),
+        EnvironmentVariableSource("PROSPER_API", separator="__"),
+        EnvironmentVariableSource("PROSPER_BOT", separator="__"),
+        ArgParseSource(_arg_parser()),
     ]
 
     confs = [c.read() for c in conf_sources]
@@ -31,118 +34,6 @@ def build_config():
         always_merger.merge(conf, partial_conf)
 
     return conf
-
-
-class _MyArgParseSource(ConfigurationSource):
-    def __init__(self, argument_parser: argparse.ArgumentParser):
-        self._argument_parser = argument_parser
-
-    def read(self) -> dict:
-        raw_namespace = self._argument_parser.parse_args()
-        nested_config = {}
-
-        for key, val in raw_namespace.__dict__.items():
-            if val is None or any(
-                a
-                for a in self._argument_parser._actions
-                if key == a.dest and val == a.default
-            ):
-                continue
-            key_components = key.split("__")
-            config_namespace = nested_config
-            for key_component in key_components[:-1]:
-                if key_component not in config_namespace:
-                    config_namespace[key_component] = {}
-                config_namespace = config_namespace[key_component]
-            config_namespace[key_components[-1]] = str(val)
-
-        return nested_config
-
-
-class _MyEnvironmentVariableSource(ConfigurationSource):
-    """A configuration source for environment variables."""
-
-    def __init__(
-        self, prefix: str, separator: str = "_", list_separator: str = ","
-    ) -> None:
-        """Creates a new instance of the EnvironmentVariableSource.
-
-        Args:
-            prefix (str): The unique prefix for the environment variables.
-            separator (str, optional): The value separator. Defaults to "_".
-            list_separator (str, optional): If a value can be interpreted as a
-                list, this will be used as separator.. Defaults to ",".
-        """
-        self.__prefix = prefix or ""
-        self.__separator = separator
-        self.__list_item_separator = list_separator
-        super().__init__()
-
-    def read(self) -> dict:
-        """Reads the environment variables and produces a nested key-value list.
-
-        Returns:
-            dict: The mapped environment variables.
-        """
-        result = dict()
-        value_map: Dict[str, str] = _MyEnvironmentVariableSource.__get_value_map()
-        mapped_variables: List[str] = [
-            key for (key, _) in value_map.items() if key.startswith(self.__prefix)
-        ]
-        for key in mapped_variables:
-            value = value_map[key]
-            sanitized: List[str] = self.__sanitize_key(key)
-            items: dict = result
-            for key_part in sanitized[:-1]:
-                if key_part not in items.keys():
-                    items[key_part.lower()] = dict()
-                items = items[key_part.lower()]
-
-            last_key: str = sanitized[-1]
-            items[last_key.lower()] = self.__sanitize_value(value)
-
-        return result
-
-    @staticmethod
-    def __get_value_map() -> Dict[str, str]:
-        """Gets a list of key-value-pairs representing the environment variables.
-
-        Returns:
-            Dict[str, str]: The key-value map.
-        """
-        return os.environ
-
-    def __sanitize_key(self, key: str) -> List[str]:
-        """Splits a key according to the specified separators.
-
-        Args:
-            key (str): The key to split into lists.
-
-        Returns:
-            List[str]: The list of split keys.
-        """
-        if key is not None:
-            working_ptr: str = key.lstrip(self.__prefix)
-            return working_ptr.split(self.__separator)
-
-        return [key]
-
-    def __sanitize_value(self, value: str) -> Union[str, List[str]]:
-        """Splits a value into a list, if applicable.
-
-        Args:
-            value (str): The value to parse.
-
-        Returns:
-            Union[str, List[str]]: The value parsed.
-        """
-        if value is not None:
-            if self.__list_item_separator in value:
-                return value.split(self.__list_item_separator)
-
-            return value
-
-        return ""
 
 
 def _arg_parser():
