@@ -21,6 +21,7 @@ def build_config():
     conf_sources: List[ConfigurationSource] = [
         TomlConfigurationSource(config_path),
         TomlConfigurationSource(join(getcwd(), ".prosper-api.toml")),
+        TomlConfigurationSource(join(getcwd(), ".pyproject.toml", "tools.prosper-api")),
         EnvironmentVariableSource("PROSPER_API", separator="__"),
         EnvironmentVariableSource("PROSPER_BOT", separator="__"),
         ArgParseSource(_arg_parser()),

@@ -35,7 +35,7 @@ jobs:
         with:
           poetry-version: ${{ matrix.poetry-version }}
       - name: Install dependencies
-        run: poetry install --without dev --with test --all-extras
+        run: poetry install --with test --all-extras
       - name: Run tests
         run: poetry run pytest
 
@@ -57,7 +57,7 @@ jobs:
       - name: Install dependencies
         run: | 
           poetry self add "poetry-dynamic-versioning[plugin]"
-          poetry install --without dev --with test --all-extras
+          poetry install --with test --all-extras
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v5.0.0
         env:
@@ -65,6 +65,8 @@ jobs:
         with:
           coverageCommand: poetry run pytest
           coverageLocations: ${{github.workspace}}/dist/coverage.info:lcov
+      - name: Build and publish package
+        run: poetry publish --build --username __token__ --password ${{ secrets.PYPI_API_TOKEN }}
       - name: Create Github release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -73,5 +75,3 @@ jobs:
           files: |
             dist/*.whl
             dist/*.tar.gz
-      - name: Build and publish package
-        run: poetry publish --build --username __token__ --password ${{ secrets.PYPI_API_TOKEN }}
