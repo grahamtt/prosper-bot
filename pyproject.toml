@@ -14,7 +14,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
-prosper-api = {version = "^0.5.15", extras = ["secure"]}
+prosper-api = {version = "^0.6.6", extras = ["secure"]}
 pytz = "^2023.3.post1"
 humanize = "^4.8.0"
 backoff = "^2.2.1"
@@ -80,7 +80,7 @@ convention = "google"
 add_ignore = ['D100', 'D104']
 
 [tool.pytest.ini_options]
-addopts = "--cov=prosper_bot --cov-report=term-missing --cov-report=lcov:dist/coverage.info --cov-fail-under=0"
+addopts = "--cov=prosper_bot --cov-report=term-missing --cov-report=lcov:dist/coverage.info --cov-fail-under=54"
 testpaths = "tests"
 python_functions = ["*_test", "test_*"]
 

@@ -7,7 +7,6 @@ from time import sleep
 import simplejson as json
 from humanize import naturaldelta
 from prosper_api.client import Client
-from prosper_api.config import Config
 from prosper_api.models import SearchListingsRequest
 
 from prosper_bot.cli import build_config
@@ -41,7 +40,7 @@ class Bot:
 
     def __init__(self):
         """Initializes the bot with the given argument values."""
-        self.config = Config(config_dict=build_config())
+        self.config = build_config()
         if self.config.get_as_bool(VERBOSE_CONFIG):
             logger.setLevel(logging.DEBUG)
 

@@ -1,45 +1,35 @@
 import argparse
 from decimal import Decimal
-from os import getcwd
-from os.path import join
-from typing import List
 
-from deepmerge import always_merger
+from prosper_api import auth_token_manager
 from prosper_api.config import Config
-from prosper_shared.omni_config.parse import (
-    ArgParseSource,
-    ConfigurationSource,
-    EnvironmentVariableSource,
-    TomlConfigurationSource,
-)
+from prosper_shared.omni_config import config_schema
+from schema import Optional
+
+
+@config_schema
+def _schema():
+    return {
+        Optional(
+            "bot", default={"dry-run": False, "verbose": False, "min-bid": Decimal(25)}
+        ): {
+            Optional("dry-run", default=False): bool,
+            Optional("verbose", default=False): bool,
+            Optional("min-bid", default=Decimal(25.00)): Decimal,
+        }
+    }
 
 
 def build_config():
     """Compiles all the config sources into a single config."""
-    config_path = Config._DEFAULT_CONFIG_PATH
-
-    conf_sources: List[ConfigurationSource] = [
-        TomlConfigurationSource(config_path),
-        TomlConfigurationSource(join(getcwd(), ".prosper-api.toml")),
-        TomlConfigurationSource(join(getcwd(), ".pyproject.toml", "tools.prosper-api")),
-        EnvironmentVariableSource("PROSPER_API", separator="__"),
-        EnvironmentVariableSource("PROSPER_BOT", separator="__"),
-        ArgParseSource(_arg_parser()),
-    ]
-
-    confs = [c.read() for c in conf_sources]
-
-    conf = {"bot": {"min_bid": "25.00"}}
-
-    for partial_conf in confs:
-        always_merger.merge(conf, partial_conf)
-
-    return conf
+    return Config.autoconfig(
+        ["prosper-api", "prosper-bot"], _arg_parser(), validate=True
+    )
 
 
 def _arg_parser():
     parser = argparse.ArgumentParser(
-        prog="Prosper bot",
+        prog="prosper-bot",
         description="A bot that can find and invest in loans according to the user's preferences",
     )
     parser.add_argument(
@@ -91,7 +81,7 @@ def _arg_parser():
     auth_group.add_argument(
         "--token-cache",
         dest="auth__token_cache",
-        help=f"Location to cache the authentication token and refresh token. Defaults to '{Config._DEFAULT_TOKEN_CACHE_PATH}'.",
+        help=f"Location to cache the authentication token and refresh token. Defaults to '{auth_token_manager._DEFAULT_TOKEN_CACHE_PATH}'.",
     )
 
     client_group = parser.add_argument_group("client")
