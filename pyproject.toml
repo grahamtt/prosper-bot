@@ -21,10 +21,10 @@ backoff = "^2.2.1"
 ratelimit = "^2.2.1"
 simplejson = "^3.19.2"
 black = "^23.11.0"
-prosper-shared = "^0.1.19"
+prosper-shared = "^0.1.23"
 
 [tool.poetry.group.dev.dependencies]
-prosper-shared = { version = "^0.1.19", extras = ["dev"] }
+prosper-shared = { version = "^0.1.23", extras = ["dev"] }
 
 [tool.autohooks]
 mode = "poetry"
