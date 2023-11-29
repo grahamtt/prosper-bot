@@ -35,7 +35,7 @@ def _arg_parser():
     parser.add_argument(
         "-d",
         "--dry-run",
-        dest="bot__dry_run",
+        dest="bot__dry-run",
         help="Do everything but actually purchase the loans",
         action="store_true",
     )
@@ -49,7 +49,7 @@ def _arg_parser():
     parser.add_argument(
         "-b",
         "--min-bid",
-        dest="bot__min_bid",
+        dest="bot__min-bid",
         help="Minimum bid amount. Must be greater than or equal to 25",
         type=Decimal,
         default=Decimal("25"),
@@ -60,12 +60,12 @@ def _arg_parser():
     )
     cred_group.add_argument(
         "--client-id",
-        dest="credentials__client_id",
+        dest="credentials__client-id",
         help="Prosper API client id to use with the requests",
     )
     cred_group.add_argument(
         "--client-secret",
-        dest="credentials__client_secret",
+        dest="credentials__client-secret",
         help="The secret corresponding to the client id; not recommended for use.",
     )
     cred_group.add_argument(
@@ -80,26 +80,26 @@ def _arg_parser():
     auth_group = parser.add_argument_group("auth")
     auth_group.add_argument(
         "--token-cache",
-        dest="auth__token_cache",
+        dest="auth__token-cache",
         help=f"Location to cache the authentication token and refresh token. Defaults to '{auth_token_manager._DEFAULT_TOKEN_CACHE_PATH}'.",
     )
 
     client_group = parser.add_argument_group("client")
     client_group.add_argument(
         "--return-floats",
-        dest="client__return_floats",
+        dest="client__return-floats",
         help="Whether the API should return floating point primitives instead of decimals for currency values. Not recommended due to rounding issues.",
         action="store_true",
     )
     client_group.add_argument(
         "--return-strings-not-dates",
-        dest="client__return_strings_not_dates",
+        dest="client__return-strings-not-dates",
         help="Whether the API should return strings for date fields instead of parsing them into 'datetime' objects.",
         action="store_true",
     )
     client_group.add_argument(
         "--return-strings-not-enums",
-        dest="client__return_strings_not_enums",
+        dest="client__return-strings-not-enums",
         help="Whether the API should return strings for categorical fields instead of parsing them into the corresponding enum values.",
         action="store_true",
     )

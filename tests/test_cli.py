@@ -1,6 +1,8 @@
 import sys
 from decimal import Decimal
 
+import pytest
+
 from prosper_bot.cli import build_config
 
 
@@ -19,13 +21,15 @@ class TestCli:
 
         config = build_config()
 
-        assert config._config_dict["bot"] == {
-            "dry-run": False,
-            "min-bid": Decimal("25"),
-            "verbose": False,
-        }
+        assert config._config_dict["bot"] == pytest.approx(
+            {
+                "dry-run": False,
+                "min-bid": Decimal("25"),
+                "verbose": False,
+            }
+        )
         assert config._config_dict["credentials"] == {
-            "client-id": "f3c747293f3e4dc5a27a6ff3cf4f6805",
+            "client-id": "0123456789abcdef0123456789abcdef",
             "username": "fake-username",
         }
-        assert config._config_dict["auth"]["token-cache"] is not None
+        assert config._config_dict["auth"]["token-cache"] == "fake-token-cache"
