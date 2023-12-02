@@ -15,7 +15,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
 prosper-api = {version = "^0.6.10", extras = ["secure"]}
-prosper-shared = "^0.1.24"
+prosper-shared = "^0.1.32"
 pytz = "^2023.3.post1"
 humanize = "^4.8.0"
 backoff = "^2.2.1"
@@ -24,11 +24,12 @@ simplejson = "^3.19.2"
 black = "^23.11.0"
 
 [tool.poetry.group.dev.dependencies]
-prosper-shared = { version = "^0.1.23", extras = ["dev"] }
+prosper-shared = { version = "^0.1.32", extras = ["dev"] }
 
 [tool.autohooks]
 mode = "poetry"
 pre-commit = [
+    "prosper_shared.autohooks.clean",
     "prosper_shared.autohooks.autoimport",
     "autohooks.plugins.black",
     "autohooks.plugins.ruff",
@@ -41,6 +42,8 @@ pre-commit = [
     # "autohooks.tox", # Commenting out for now because it appears to be running only for Python 3.10
     # "prosper_shared.autohooks.mutmut", # Commenting out for now since it fails even with the --CI flag
     # "prosper_shared.autohooks.dynamic_versioning", # Disabling for now until I figure out how to apply to the current commit.
+    "prosper_shared.autohooks.build",
+    "prosper_shared.autohooks.assert_files",
 ]
 
 [tool.autohooks.plugins.mutmut]
@@ -80,7 +83,7 @@ convention = "google"
 add_ignore = ['D100', 'D104']
 
 [tool.pytest.ini_options]
-addopts = "--cov=prosper_bot --cov-report=term-missing --cov-report=lcov:dist/coverage.info --cov-fail-under=48"
+addopts = "--cov=prosper_bot --cov-report=term-missing --cov-report=lcov:dist/coverage.info --cov-fail-under=48 "
 testpaths = "tests"
 python_functions = ["*_test", "test_*"]
 
