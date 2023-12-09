@@ -1,6 +1,6 @@
 import pytest
 
-from prosper_bot.util import bucketize
+from prosper_bot.util import bucketize, print_histogram
 
 
 class TestUtils:
@@ -52,3 +52,29 @@ class TestUtils:
         self, iterable, bucketizer, evaluator, expected
     ):
         assert bucketize(iterable, bucketizer, evaluator) == expected
+
+    def test_print_histogram_percent(self, mocker):
+        printer = mocker.MagicMock()
+        print_histogram(
+            "Title", {"a": 6, "b": 9, "c": 3}, percent=True, printer=printer
+        )
+
+        assert printer.mock_calls == [
+            mocker.call("### Title ###"),
+            mocker.call("a: ################################# 33.33%"),
+            mocker.call("b: ################################################## 50.00%"),
+            mocker.call("c: ################ 16.67%"),
+        ]
+
+    def test_print_histogram_not_percent(self, mocker):
+        printer = mocker.MagicMock()
+        print_histogram(
+            "Title", {"a": 6, "b": 9, "c": 3}, percent=False, printer=printer
+        )
+
+        assert printer.mock_calls == [
+            mocker.call("### Title ###"),
+            mocker.call("a: ###### 6.00"),
+            mocker.call("b: ######### 9.00"),
+            mocker.call("c: ### 3.00"),
+        ]

@@ -1,7 +1,6 @@
 from decimal import Decimal
 
-from prosper_api.config import Config
-from prosper_shared.omni_config import config_schema
+from prosper_shared.omni_config import Config, config_schema
 from schema import Optional
 
 
