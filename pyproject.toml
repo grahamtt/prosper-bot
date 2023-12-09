@@ -83,7 +83,7 @@ convention = "google"
 add_ignore = ['D100', 'D104']
 
 [tool.pytest.ini_options]
-addopts = "--cov=prosper_bot --cov-report=term-missing --cov-report=lcov:dist/coverage.info --cov-fail-under=48 "
+addopts = "--cov=prosper_bot --cov-report=term-missing --cov-report=lcov:dist/coverage.info --cov-report=html:dist/coveragereport --cov-fail-under=48 "
 testpaths = "tests"
 python_functions = ["*_test", "test_*"]
 

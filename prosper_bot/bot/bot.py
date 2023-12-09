@@ -21,7 +21,7 @@ VERBOSE_CONFIG = "bot.verbose"
 MIN_BID_CONFIG = "bot.min_bid"
 
 POLL_TIME = timedelta(minutes=1)
-TARGETS = {
+AGGRESSIVE_TARGETS = {
     "NA": Decimal("0"),
     "HR": Decimal("0.02"),
     "E": Decimal("0.26"),
@@ -30,6 +30,16 @@ TARGETS = {
     "B": Decimal("0.15"),
     "A": Decimal("0.06"),
     "AA": Decimal("0.06"),
+}
+CONSERVATIVE_TARGETS = {
+    "NA": Decimal("0"),
+    "HR": Decimal("0.02"),
+    "E": Decimal("0.06"),
+    "D": Decimal("0.06"),
+    "C": Decimal("0.15"),
+    "B": Decimal("0.22"),
+    "A": Decimal("0.26"),
+    "AA": Decimal("0.23"),
 }
 
 BucketDatum = namedtuple("BucketDatum", ["value", "pct_of_total", "error_pct"])
@@ -72,7 +82,7 @@ class Bot:
             buckets[rating] = BucketDatum(
                 value=value,
                 pct_of_total=pct_of_total,
-                error_pct=TARGETS[rating] - pct_of_total,
+                error_pct=AGGRESSIVE_TARGETS[rating] - pct_of_total,
             )
 
         grade_buckets_sorted_by_error_pct = sorted(

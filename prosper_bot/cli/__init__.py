@@ -1,10 +1,10 @@
 from decimal import Decimal
 
-from prosper_shared.omni_config import Config, config_schema
+from prosper_shared.omni_config import Config, input_schema
 from schema import Optional
 
 
-@config_schema
+@input_schema
 def _schema():
     return {
         Optional(
@@ -13,6 +13,7 @@ def _schema():
             Optional("dry-run", default=False): bool,
             Optional("verbose", default=False): bool,
             Optional("min-bid", default=Decimal(25.00)): Decimal,
+            Optional("strategy", default="AGGRESSIVE"): str,
         }
     }
 
