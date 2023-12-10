@@ -8,10 +8,6 @@ from prosper_api.models import Listing, SearchListingsRequest
 __all__ = ["AllocationStrategy"]
 
 
-def _lender_yield_sort(listing: Listing) -> bool:
-    return listing.lender_yield
-
-
 class AllocationStrategy(AbstractContextManager, Iterable[Listing]):
     """Defines a partial order over the set of active prosper listings.
 
@@ -21,7 +17,7 @@ class AllocationStrategy(AbstractContextManager, Iterable[Listing]):
     def __init__(
         self,
         client: Client,
-        api_param_iterator: Iterator[SearchListingsRequest],
+        search_request_iterator: Iterator[SearchListingsRequest],
         local_sort: Optional[Callable[[Listing], bool]] = None,
         timeout_seconds: float = -1.0,
     ):
@@ -29,21 +25,20 @@ class AllocationStrategy(AbstractContextManager, Iterable[Listing]):
 
         Args:
             client (Client): Prosper API client
-            api_param_iterator (Iterator[SearchListingsRequest]): Iterates over the different parameters to pass the Listing api.
+            search_request_iterator (Iterator[SearchListingsRequest]): Iterates over the different parameters to pass the Listing api.
             local_sort (Optional[Callable[[Listing], bool]]): Sorts the returned listings into the desired final order before returning.
             timeout_seconds (float): The max real time in seconds to try to get a listing before giving up. `-1` (default) indicates not timeout is required.
         """
-        if local_sort is None:
-            local_sort = _lender_yield_sort
         self._client = client
-        self._api_param_iterator = api_param_iterator
+        self._api_param_iterator = search_request_iterator
         self._local_sort = local_sort
         self._end_time = (
             datetime.now() + timedelta(seconds=timeout_seconds)
             if timeout_seconds > 0
             else None
         )
-        self._params: Optional[SearchListingsRequest] = None
+        # We hold on to this to help with debugging. It's not used after generation.
+        self._search_request: Optional[SearchListingsRequest] = None
         self._buffer: Optional[Iterable[Listing]] = None
 
     def __next__(self) -> Listing:
@@ -56,10 +51,15 @@ class AllocationStrategy(AbstractContextManager, Iterable[Listing]):
                 raise StopIteration("Timed out while searching listings")
 
         if self._buffer is None:
-            self._params = self._api_param_iterator.__next__()
-            result = sorted(
-                self._client.search_listings(self._params).result, key=self._local_sort
-            )
+            self._search_request = self._api_param_iterator.__next__()
+            if self._local_sort is not None:
+                result = sorted(
+                    self._client.search_listings(self._search_request).result,
+                    key=self._local_sort,
+                )
+            else:
+                result = self._client.search_listings(self._search_request).result
+
             if len(result) == 0:
                 raise StopIteration("Not more listings")
             self._buffer = iter(result)

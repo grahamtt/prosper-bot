@@ -41,15 +41,15 @@ class TestAllocationStrategy:
         )
         return client
 
-    def test_allocation_strategy_one_matching_listing(self, mock_client):
+    def test_allocation_strategy_with_matching_listings(self, mock_client):
         api_params = [SearchListingsRequest()]
 
         allocation_strategy = AllocationStrategy(
-            mock_client, api_param_iterator=iter(api_params)
+            mock_client, search_request_iterator=iter(api_params)
         )
         assert len(list(allocation_strategy)) == 10
 
-    def test_allocation_strategy_ten_matching_listings(self, mock_client):
+    def test_allocation_strategy_no_matching_listings(self, mock_client):
         api_params = []
 
         mock_client.search_listings.return_value = SearchListingsResponse(
@@ -57,7 +57,7 @@ class TestAllocationStrategy:
         )
 
         allocation_strategy = AllocationStrategy(
-            mock_client, api_param_iterator=iter(api_params)
+            mock_client, search_request_iterator=iter(api_params)
         )
         with pytest.raises(StopIteration):
             next(allocation_strategy)

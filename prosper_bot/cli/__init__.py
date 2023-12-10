@@ -13,7 +13,7 @@ def _schema():
             Optional("dry-run", default=False): bool,
             Optional("verbose", default=False): bool,
             Optional("min-bid", default=Decimal(25.00)): Decimal,
-            Optional("strategy", default="AGGRESSIVE"): str,
+            Optional("simulate", default=False): bool,
         }
     }
 

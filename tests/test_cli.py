@@ -26,7 +26,7 @@ class TestCli:
                 "dry-run": False,
                 "min-bid": Decimal("25"),
                 "verbose": False,
-                "strategy": "AGGRESSIVE",
+                "simulate": False,
             }
         )
         assert config._config_dict["credentials"] == {
@@ -47,7 +47,6 @@ class TestCli:
                 "--dry-run",
                 "--verbose",
                 "--min-bid=30",
-                "--strategy=CONSERVATIVE",
             ],
         )
 
@@ -58,7 +57,7 @@ class TestCli:
                 "dry-run": True,
                 "min-bid": Decimal("30"),
                 "verbose": True,
-                "strategy": "CONSERVATIVE",
+                "simulate": False,
             }
         )
         assert config._config_dict["credentials"] == {
