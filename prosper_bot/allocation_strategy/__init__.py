@@ -1,4 +1,3 @@
-from contextlib import AbstractContextManager
 from datetime import datetime, timedelta
 from typing import Callable, Iterable, Iterator, Optional
 
@@ -8,10 +7,11 @@ from prosper_api.models import Listing, SearchListingsRequest
 __all__ = ["AllocationStrategy"]
 
 
-class AllocationStrategy(AbstractContextManager, Iterable[Listing]):
+class AllocationStrategy(Iterable[Listing]):
     """Defines a partial order over the set of active prosper listings.
 
-    Specifically, it defines a sequence of prosper API calls to get listings and an optional sort method used to reorder them before emission. Use the timeout parameter to force a maximum time to wait for matching listings.
+    Specifically, it defines a sequence of prosper API calls to get listings and an optional sort method used to
+    reorder them before emission. Use the timeout parameter to force a maximum time to wait for matching listings.
     """
 
     def __init__(
@@ -25,9 +25,12 @@ class AllocationStrategy(AbstractContextManager, Iterable[Listing]):
 
         Args:
             client (Client): Prosper API client
-            search_request_iterator (Iterator[SearchListingsRequest]): Iterates over the different parameters to pass the Listing api.
-            local_sort (Optional[Callable[[Listing], bool]]): Sorts the returned listings into the desired final order before returning.
-            timeout_seconds (float): The max real time in seconds to try to get a listing before giving up. `-1` (default) indicates not timeout is required.
+            search_request_iterator (Iterator[SearchListingsRequest]): Iterates over the different parameters to pass
+                the Listing api.
+            local_sort (Optional[Callable[[Listing], bool]]): Sorts the returned listings into the desired final order
+                before returning.
+            timeout_seconds (float): The max real time in seconds to try to get a listing before giving up. `-1`
+                (default) indicates no timeout is required.
         """
         self._client = client
         self._api_param_iterator = search_request_iterator
@@ -69,7 +72,3 @@ class AllocationStrategy(AbstractContextManager, Iterable[Listing]):
     def __iter__(self):
         """Implements the iterable interface."""
         return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        """Does nothing yet."""
-        return None

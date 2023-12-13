@@ -1,15 +1,16 @@
 from decimal import Decimal
+from enum import Enum
 from logging import getLogger
-from typing import Dict, NamedTuple, Optional, Union
+from typing import NamedTuple, Union
 
 from prosper_api.client import Client
 from prosper_api.models import Account, SearchListingsRequest
 
 from prosper_bot.allocation_strategy import AllocationStrategy
 
-logger = getLogger()
+logger = getLogger(__file__)
 
-AGGRESSIVE_TARGETS = {
+_AGGRESSIVE_TARGETS = {
     "NA": Decimal("0"),
     "HR": Decimal("0.02"),
     "E": Decimal("0.26"),
@@ -20,7 +21,7 @@ AGGRESSIVE_TARGETS = {
     "AA": Decimal("0.06"),
 }
 
-CONSERVATIVE_TARGETS = {
+_CONSERVATIVE_TARGETS = {
     "NA": Decimal("0"),
     "HR": Decimal("0.02"),
     "E": Decimal("0.06"),
@@ -30,6 +31,13 @@ CONSERVATIVE_TARGETS = {
     "A": Decimal("0.26"),
     "AA": Decimal("0.23"),
 }
+
+
+class FixedTargetAllocationStrategyTargets(Enum):
+    """Enumerates the pre-configured targets for FixedTargetAllocationStrategy."""
+
+    AGGRESSIVE = _AGGRESSIVE_TARGETS
+    CONSERVATIVE = _CONSERVATIVE_TARGETS
 
 
 class _BucketDatum(NamedTuple):
@@ -45,17 +53,18 @@ class FixedTargetAllocationStrategy(AllocationStrategy):
         self,
         client: Client,
         account: Account,
-        targets: Optional[Dict[str, Decimal]] = None,
+        targets: FixedTargetAllocationStrategyTargets = None,
     ):
         """Instantiates a FixedTargetAllocationStrategy.
 
         Args:
             client (Client): The prosper API client.
             account (Account): Represents the current status of the Prosper account.
-            targets (Optional[Dict[str, Decimal]]): The target allocations by prosper rating.
+            targets (FixedTargetAllocationStrategyTargets): The target allocations by prosper rating.
         """
         if targets is None:
-            targets = AGGRESSIVE_TARGETS
+            targets = FixedTargetAllocationStrategyTargets.AGGRESSIVE
+        targets_dict = targets.value
         buckets = {}
         invested_notes = account.invested_notes._asdict()
         pending_bids = account.pending_bids._asdict()
@@ -67,7 +76,7 @@ class FixedTargetAllocationStrategy(AllocationStrategy):
             buckets[rating] = _BucketDatum(
                 value=value,
                 pct_of_total=pct_of_total,
-                error_pct=targets[rating] - pct_of_total,
+                error_pct=targets_dict[rating] - pct_of_total,
             )
 
         buckets["Cash"] = _BucketDatum(

@@ -23,12 +23,12 @@ class TestCli:
 
         assert config._config_dict["bot"] == pytest.approx(
             {
-                "dry-run": False,
                 "min-bid": Decimal("25"),
-                "verbose": False,
+                "strategy": "AGGRESSIVE",
                 "simulate": False,
             }
         )
+        assert config._config_dict["cli"] == {"dry-run": False, "verbose": False}
         assert config._config_dict["credentials"] == {
             "client-id": "0123456789abcdef0123456789abcdef",
             "username": "fake-username",
@@ -47,6 +47,7 @@ class TestCli:
                 "--dry-run",
                 "--verbose",
                 "--min-bid=30",
+                "--strategy=CONSERVATIVE",
             ],
         )
 
@@ -54,12 +55,12 @@ class TestCli:
 
         assert config._config_dict["bot"] == pytest.approx(
             {
-                "dry-run": True,
                 "min-bid": Decimal("30"),
-                "verbose": True,
+                "strategy": "CONSERVATIVE",
                 "simulate": False,
             }
         )
+        assert config._config_dict["cli"] == {"dry-run": True, "verbose": True}
         assert config._config_dict["credentials"] == {
             "client-id": "0123456789abcdef0123456789abcdef",
             "username": "fake-username",

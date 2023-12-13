@@ -6,21 +6,44 @@ from time import sleep
 import simplejson as json
 from humanize import naturaldelta
 from prosper_api.client import Client
+from prosper_shared.omni_config import config_schema
+from schema import Optional as SchemaOptional
 
-from prosper_bot.allocation_strategy.fixed_target import FixedTargetAllocationStrategy
-from prosper_bot.cli import build_config
+from prosper_bot.allocation_strategy.fixed_target import (
+    FixedTargetAllocationStrategy,
+    FixedTargetAllocationStrategyTargets,
+)
+from prosper_bot.cli import DRY_RUN_CONFIG, VERBOSE_CONFIG, build_config
+
+logger = logging.getLogger(__file__)
 
 logging.basicConfig(
     format="%(asctime)s %(levelname)-8s %(message)s", level=logging.INFO
 )
-logger = logging.getLogger(__file__)
 
-DRY_RUN_CONFIG = "bot.dry-run"
-VERBOSE_CONFIG = "bot.verbose"
 MIN_BID_CONFIG = "bot.min_bid"
 SIMULATE_CONFIG = "bot.simulate"
+STRATEGY_CONFIG = "bot.strategy"
 
 POLL_TIME = timedelta(minutes=1)
+
+
+@config_schema
+def _schema():
+    return {
+        SchemaOptional(
+            "bot",
+            default={
+                "min-bid": Decimal("25.00"),
+                "strategy": "AGGRESSIVE",
+                "simulate": False,
+            },
+        ): {
+            SchemaOptional("min-bid", default=Decimal("25.00")): Decimal,
+            SchemaOptional("strategy", default="AGGRESSIVE"): str,
+            SchemaOptional("simulate", default=False): bool,
+        }
+    }
 
 
 class Bot:
@@ -30,12 +53,16 @@ class Bot:
         """Initializes the bot with the given argument values."""
         self.config = build_config()
         if self.config.get_as_bool(VERBOSE_CONFIG):
+            logging.root.setLevel(logging.DEBUG)
             logger.setLevel(logging.DEBUG)
 
         self.client = Client(config=self.config)
         self.dry_run = self.config.get_as_bool(DRY_RUN_CONFIG)
         self.min_bid = self.config.get_as_decimal(MIN_BID_CONFIG, Decimal(25.00))
         self.simulate = self.config.get_as_bool(SIMULATE_CONFIG, False)
+        self.targets = self.config.get_as_enum(
+            STRATEGY_CONFIG, FixedTargetAllocationStrategyTargets
+        )
 
     def run(self):
         """Main loop for the trading bot."""
@@ -53,11 +80,17 @@ class Bot:
             return cash, POLL_TIME
 
         cash = new_cash
+
+        # TODO: Support other allocation strategies
+        #   The allocation strategies are designed to be flexible, but that's not possible if we hard-code the strategy
+        #   class.
+        allocation_strategy = FixedTargetAllocationStrategy(
+            self.client, account, targets=self.targets
+        )
+
         invest_amount = self._get_bid_amount(cash, self.min_bid)
         if invest_amount or self.dry_run:
             logger.info("Enough cash is available; searching for loans...")
-
-            allocation_strategy = FixedTargetAllocationStrategy(self.client, account)
 
             listing = next(allocation_strategy)
             lender_yield = listing.lender_yield
