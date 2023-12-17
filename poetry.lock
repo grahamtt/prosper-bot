@@ -2,19 +2,20 @@
 
 [[package]]
 name = "anyio"
-version = "4.1.0"
+version = "4.2.0"
 description = "High level compatibility layer for multiple asynchronous event loop implementations"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "anyio-4.1.0-py3-none-any.whl", hash = "sha256:56a415fbc462291813a94528a779597226619c8e78af7de0507333f700011e5f"},
-    {file = "anyio-4.1.0.tar.gz", hash = "sha256:5a0bec7085176715be77df87fc66d6c9d70626bd752fcc85f57cdbee5b3760da"},
+    {file = "anyio-4.2.0-py3-none-any.whl", hash = "sha256:745843b39e829e108e518c489b31dc757de7d2131d53fac32bd8df268227bfee"},
+    {file = "anyio-4.2.0.tar.gz", hash = "sha256:e1875bb4b4e2de1669f4bc7869b6d3f54231cdced71605e6e64c9be77e3be50f"},
 ]
 
 [package.dependencies]
 exceptiongroup = {version = ">=1.0.2", markers = "python_version < \"3.11\""}
 idna = ">=2.8"
 sniffio = ">=1.1"
+typing-extensions = {version = ">=4.1", markers = "python_version < \"3.11\""}
 
 [package.extras]
 doc = ["Sphinx (>=7)", "packaging", "sphinx-autodoc-typehints (>=1.2.0)", "sphinx-rtd-theme"]
@@ -1257,13 +1258,13 @@ files = [
 
 [[package]]
 name = "prosper-api"
-version = "0.7.0"
+version = "0.7.2"
 description = "Python trading library for Prosper.com"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "prosper_api-0.7.0-py3-none-any.whl", hash = "sha256:39bc1ba252a67e9fb24235b796bba9ade819a685bb5f42dd7914c4123d8df247"},
-    {file = "prosper_api-0.7.0.tar.gz", hash = "sha256:61e0dee1e11ddcd9dc91331f14cd8ab6c2291179d929aa02f2766a03056822c7"},
+    {file = "prosper_api-0.7.2-py3-none-any.whl", hash = "sha256:ecfe21dc523437fa1fbc581e40f66f4edf925eb5a4ae799f01aa2009ada474e9"},
+    {file = "prosper_api-0.7.2.tar.gz", hash = "sha256:ed484706f804d5e79b5fd93f752e86a2eea7de42ed41cf58a9b670ba26b6ce54"},
 ]
 
 [package.dependencies]
@@ -1271,7 +1272,7 @@ backoff = ">=2.2.1,<3.0.0"
 dpath = ">=2.1.6,<3.0.0"
 keyring = {version = ">=24.2.0,<25.0.0", optional = true, markers = "extra == \"secure\""}
 platformdirs = ">=4.0.0,<5.0.0"
-prosper-shared = ">=0.1.33,<0.2.0"
+prosper-shared = ">=0.1.40,<0.2.0"
 ratelimit = ">=2.2.1,<3.0.0"
 requests = ">=2.31.0,<3.0.0"
 schema = ">=0.7.5,<0.8.0"
@@ -1282,13 +1283,13 @@ secure = ["keyring (>=24.2.0,<25.0.0)"]
 
 [[package]]
 name = "prosper-shared"
-version = "0.1.39"
+version = "0.1.40"
 description = ""
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "prosper_shared-0.1.39-py3-none-any.whl", hash = "sha256:ed328a5bfd735ea99af12c774ed3c0f867ef9d87819a1b679ef91acaf164bba6"},
-    {file = "prosper_shared-0.1.39.tar.gz", hash = "sha256:34392b3e53618027a560801f4d9dbbd124675e0c2e356444152ddfc5ace5fdf0"},
+    {file = "prosper_shared-0.1.40-py3-none-any.whl", hash = "sha256:57d71c94cfe7c21d33fafa9b3d40127b47cbfeca88809a8ed4c06550015b95b1"},
+    {file = "prosper_shared-0.1.40.tar.gz", hash = "sha256:2818e1b8157a8cb488f21bfbabc082782f0b33d68c33ece5fa32dad1e9320662"},
 ]
 
 [package.dependencies]
@@ -2031,4 +2032,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0"
-content-hash = "64b7a970160dfa65dab5042e6e7e888b45f000c458069d5f9944d33c989ac292"
+content-hash = "362cc9e650011d3b314f7791701af025098737168e2e79c0375aaa607ce2667a"

@@ -54,21 +54,30 @@ class AllocationStrategy(Iterable[Listing]):
                 raise StopIteration("Timed out while searching listings")
 
         if self._buffer is None:
-            self._search_request = self._api_param_iterator.__next__()
-            if self._local_sort is not None:
-                result = sorted(
-                    self._client.search_listings(self._search_request).result,
-                    key=self._local_sort,
-                )
-            else:
-                result = self._client.search_listings(self._search_request).result
+            self._buffer = self._refresh_buffer()
 
-            if len(result) == 0:
-                raise StopIteration("Not more listings")
-            self._buffer = iter(result)
+        while True:
+            try:
+                next_val = next(self._buffer)
+                break
+            except StopIteration:
+                # This might throw a StopIteration also; that means we're actually done
+                self._buffer = self._refresh_buffer()
 
-        return next(self._buffer)
+        return next_val
 
     def __iter__(self):
         """Implements the iterable interface."""
         return self
+
+    def _refresh_buffer(self):
+        self._search_request = self._api_param_iterator.__next__()
+        if self._local_sort is not None:
+            result = sorted(
+                self._client.search_listings(self._search_request).result,
+                key=self._local_sort,
+            )
+        else:
+            result = self._client.search_listings(self._search_request).result
+
+        return iter(result)

@@ -14,8 +14,8 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
-prosper-api = {version = "^0.7.0", extras = ["secure"]}
-prosper-shared = "^0.1.38"
+prosper-api = {version = "^0.7.2", extras = ["secure"]}
+prosper-shared = "^0.1.40"
 pytz = "^2023.3.post1"
 humanize = "^4.8.0"
 backoff = "^2.2.1"
@@ -24,7 +24,7 @@ simplejson = "^3.19.2"
 black = "^23.11.0"
 
 [tool.poetry.group.dev.dependencies]
-prosper-shared = { version = "^0.1.38", extras = ["dev"] }
+prosper-shared = { version = "^0.1.0", extras = ["dev"] }
 
 [tool.autohooks]
 mode = "poetry"
