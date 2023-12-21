@@ -3,10 +3,14 @@ from decimal import Decimal
 
 import pytest
 
+from prosper_bot.bot import bot
 from prosper_bot.cli import build_config
 
 
 class TestCli:
+    # Ensure the schema is loaded
+    bot._schema()
+
     def test_build_config_defaults(self, mocker):
         mocker.patch.object(
             sys,
@@ -25,10 +29,13 @@ class TestCli:
             {
                 "min-bid": Decimal("25"),
                 "strategy": "AGGRESSIVE",
-                "simulate": False,
             }
         )
-        assert config._config_dict["cli"] == {"dry-run": False, "verbose": False}
+        assert config._config_dict["cli"] == {
+            "dry-run": False,
+            "verbose": False,
+            "simulate": False,
+        }
         assert config._config_dict["credentials"] == {
             "client-id": "0123456789abcdef0123456789abcdef",
             "username": "fake-username",
@@ -54,13 +61,13 @@ class TestCli:
         config = build_config()
 
         assert config._config_dict["bot"] == pytest.approx(
-            {
-                "min-bid": Decimal("30"),
-                "strategy": "CONSERVATIVE",
-                "simulate": False,
-            }
+            {"min-bid": Decimal("30"), "strategy": "CONSERVATIVE"}
         )
-        assert config._config_dict["cli"] == {"dry-run": True, "verbose": True}
+        assert config._config_dict["cli"] == {
+            "dry-run": True,
+            "verbose": True,
+            "simulate": False,
+        }
         assert config._config_dict["credentials"] == {
             "client-id": "0123456789abcdef0123456789abcdef",
             "username": "fake-username",

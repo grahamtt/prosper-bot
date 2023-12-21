@@ -6,14 +6,18 @@ from time import sleep
 import simplejson as json
 from humanize import naturaldelta
 from prosper_api.client import Client
-from prosper_shared.omni_config import config_schema
-from schema import Optional as SchemaOptional
+from prosper_shared.omni_config import ConfigKey, config_schema
 
 from prosper_bot.allocation_strategy.fixed_target import (
     FixedTargetAllocationStrategy,
     FixedTargetAllocationStrategyTargets,
 )
-from prosper_bot.cli import DRY_RUN_CONFIG, VERBOSE_CONFIG, build_config
+from prosper_bot.cli import (
+    DRY_RUN_CONFIG,
+    SIMULATE_CONFIG,
+    VERBOSE_CONFIG,
+    build_config,
+)
 
 logger = logging.getLogger(__file__)
 
@@ -22,7 +26,6 @@ logging.basicConfig(
 )
 
 MIN_BID_CONFIG = "bot.min_bid"
-SIMULATE_CONFIG = "bot.simulate"
 STRATEGY_CONFIG = "bot.strategy"
 
 POLL_TIME = timedelta(minutes=1)
@@ -31,17 +34,17 @@ POLL_TIME = timedelta(minutes=1)
 @config_schema
 def _schema():
     return {
-        SchemaOptional(
-            "bot",
-            default={
-                "min-bid": Decimal("25.00"),
-                "strategy": "AGGRESSIVE",
-                "simulate": False,
-            },
-        ): {
-            SchemaOptional("min-bid", default=Decimal("25.00")): Decimal,
-            SchemaOptional("strategy", default="AGGRESSIVE"): str,
-            SchemaOptional("simulate", default=False): bool,
+        "bot": {
+            ConfigKey(
+                "min-bid",
+                "Minimum amount of a loan to purchase.",
+                default=Decimal("25.00"),
+            ): Decimal,
+            ConfigKey(
+                "strategy",
+                "Strategy for balancing your portfolio.",
+                default="AGGRESSIVE",
+            ): str,
         }
     }
 
@@ -57,9 +60,9 @@ class Bot:
             logger.setLevel(logging.DEBUG)
 
         self.client = Client(config=self.config)
-        self.dry_run = self.config.get_as_bool(DRY_RUN_CONFIG)
-        self.min_bid = self.config.get_as_decimal(MIN_BID_CONFIG, Decimal(25.00))
         self.simulate = self.config.get_as_bool(SIMULATE_CONFIG, False)
+        self.dry_run = self.config.get_as_bool(DRY_RUN_CONFIG) or self.simulate
+        self.min_bid = self.config.get_as_decimal(MIN_BID_CONFIG, Decimal(25.00))
         self.targets = self.config.get_as_enum(
             STRATEGY_CONFIG, FixedTargetAllocationStrategyTargets
         )
