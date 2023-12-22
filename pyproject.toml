@@ -50,7 +50,7 @@ pre-commit = [
 
 [tool.autohooks.plugins.build_extras]
 commands = [
-    "jinja2 -Dcli_options=\"`prosper-bot -h`\" README.md.jinja2 > README.md"
+    "jinja2 -Dcli_options=\"`COLUMNS=120 prosper-bot -h`\" README.md.jinja2 > README.md"
 ]
 affected_files = ['README.md']
 
