@@ -34,17 +34,19 @@ POLL_TIME = timedelta(minutes=1)
 @config_schema
 def _schema():
     return {
-        "bot": {
-            ConfigKey(
-                "min-bid",
-                "Minimum amount of a loan to purchase.",
-                default=Decimal("25.00"),
-            ): Decimal,
-            ConfigKey(
-                "strategy",
-                "Strategy for balancing your portfolio.",
-                default=FixedTargetAllocationStrategyTargets.AGGRESSIVE,
-            ): FixedTargetAllocationStrategyTargets,
+        "prosper_bot": {
+            "bot": {
+                ConfigKey(
+                    "min-bid",
+                    "Minimum amount of a loan to purchase.",
+                    default=Decimal("25.00"),
+                ): Decimal,
+                ConfigKey(
+                    "strategy",
+                    "Strategy for balancing your portfolio.",
+                    default=FixedTargetAllocationStrategyTargets.AGGRESSIVE,
+                ): FixedTargetAllocationStrategyTargets,
+            }
         }
     }
 

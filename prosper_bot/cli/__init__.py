@@ -8,20 +8,22 @@ SIMULATE_CONFIG = "cli.simulate"
 @input_schema
 def _schema():
     return {
-        "cli": {
-            ConfigKey(
-                "verbose", "Prints additional debug messages.", default=False
-            ): bool,
-            ConfigKey(
-                "dry-run",
-                "Run the loop but don't actually place any orders.",
-                default=False,
-            ): bool,
-            ConfigKey(
-                "simulate",
-                "Run the loop as if the account had the minimum bid amount. Implies `dry-run`.",
-                default=False,
-            ): bool,
+        "prosper_bot": {
+            "cli": {
+                ConfigKey(
+                    "verbose", "Prints additional debug messages.", default=False
+                ): bool,
+                ConfigKey(
+                    "dry-run",
+                    "Run the loop but don't actually place any orders.",
+                    default=False,
+                ): bool,
+                ConfigKey(
+                    "simulate",
+                    "Run the loop as if the account had the minimum bid amount. Implies `dry-run`.",
+                    default=False,
+                ): bool,
+            }
         }
     }
 

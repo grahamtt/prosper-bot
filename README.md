@@ -51,7 +51,9 @@ usage: prosper-bot [-h] [--use-decimals] [--parse-dates] [--parse-enums] [--clie
 options:
   -h, --help            show this help message and exit
 
-serde:
+prosper_shared:
+
+prosper_shared.serde:
 
   --use-decimals        Floating point values should be parsed as decimals instead of floats.;
                         Type: bool; Default: True
@@ -61,7 +63,9 @@ serde:
   --parse-enums         Enum values represented as strings should be parsed into their respective
                         types.; Type: bool; Default: True
 
-credentials:
+prosper_api:
+
+prosper_api.credentials:
 
   --client-id CLIENT-ID
                         The client-id from Prosper.; Type: str matching /^[a-f0-9]{32}$/
@@ -72,19 +76,23 @@ credentials:
   --password PASSWORD   Your Prosper password; can be configured using the keyring library.; Type:
                         str
 
-auth:
+prosper_api.auth:
 
   --token-cache TOKEN-CACHE
                         The filesystem location where the auth token will be cached.; Type: str;
                         Default: /home/graham/.cache/prosper-api/token-cache
 
-bot:
+prosper_bot:
+
+prosper_bot.bot:
 
   --min-bid MIN-BID     Minimum amount of a loan to purchase.; Type: Decimal; Default: 25.00
   --strategy {AGGRESSIVE,CONSERVATIVE}
                         Strategy for balancing your portfolio.; Type: str; Default: AGGRESSIVE
 
-cli:
+prosper_bot:
+
+prosper_bot.cli:
 
   --verbose             Prints additional debug messages.; Type: bool; Default: False
   --dry-run             Run the loop but don't actually place any orders.; Type: bool; Default:
