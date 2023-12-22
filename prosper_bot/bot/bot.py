@@ -3,6 +3,7 @@ from datetime import timedelta
 from decimal import Decimal
 from time import sleep
 
+import humanize
 import simplejson as json
 from humanize import naturaldelta
 from prosper_api.client import Client
@@ -54,9 +55,11 @@ def _schema():
 class Bot:
     """Prosper trading bot."""
 
-    def __init__(self):
+    def __init__(self, config=None):
         """Initializes the bot with the given argument values."""
-        self.config = build_config()
+        if config is None:
+            config = build_config()
+        self.config = config
         if self.config.get_as_bool(VERBOSE_CONFIG):
             logging.root.setLevel(logging.DEBUG)
             logger.setLevel(logging.DEBUG)
@@ -72,8 +75,18 @@ class Bot:
     def run(self):
         """Main loop for the trading bot."""
         cash = None
+        sleep_time_delta = POLL_TIME
         while True:
-            cash, sleep_time_delta = self._do_run(cash)
+            try:
+                cash, sleep_time_delta = self._do_run(cash)
+            except KeyboardInterrupt:
+                logger.info("Interrupted...")
+                break
+            except Exception as e:
+                logger.warning(
+                    f"Caught exception running bot loop: {e}. Continuing after {humanize.naturaldelta(sleep_time_delta)}..."
+                )
+                logger.debug("", exc_info=e)
 
             sleep(sleep_time_delta.total_seconds())
 
