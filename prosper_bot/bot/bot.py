@@ -43,8 +43,8 @@ def _schema():
             ConfigKey(
                 "strategy",
                 "Strategy for balancing your portfolio.",
-                default="AGGRESSIVE",
-            ): str,
+                default=FixedTargetAllocationStrategyTargets.AGGRESSIVE,
+            ): FixedTargetAllocationStrategyTargets,
         }
     }
 

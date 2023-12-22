@@ -3,6 +3,9 @@ from decimal import Decimal
 
 import pytest
 
+from prosper_bot.allocation_strategy.fixed_target import (
+    FixedTargetAllocationStrategyTargets,
+)
 from prosper_bot.bot import bot
 from prosper_bot.cli import build_config
 
@@ -28,7 +31,7 @@ class TestCli:
         assert config._config_dict["bot"] == pytest.approx(
             {
                 "min-bid": Decimal("25"),
-                "strategy": "AGGRESSIVE",
+                "strategy": FixedTargetAllocationStrategyTargets.AGGRESSIVE,
             }
         )
         assert config._config_dict["cli"] == {
@@ -61,7 +64,10 @@ class TestCli:
         config = build_config()
 
         assert config._config_dict["bot"] == pytest.approx(
-            {"min-bid": Decimal("30"), "strategy": "CONSERVATIVE"}
+            {
+                "min-bid": Decimal("30"),
+                "strategy": FixedTargetAllocationStrategyTargets.CONSERVATIVE,
+            }
         )
         assert config._config_dict["cli"] == {
             "dry-run": True,

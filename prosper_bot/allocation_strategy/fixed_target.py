@@ -39,6 +39,10 @@ class FixedTargetAllocationStrategyTargets(Enum):
     AGGRESSIVE = _AGGRESSIVE_TARGETS
     CONSERVATIVE = _CONSERVATIVE_TARGETS
 
+    def __str__(self):
+        """Return the name of the enum to make it more palatable in the CLI help."""
+        return self.name
+
 
 class _BucketDatum(NamedTuple):
     value: Union[float, Decimal]

@@ -45,8 +45,8 @@ Prosper bot exposes all the config options from `prosper-api`, plus the options 
 ```
 usage: prosper-bot [-h] [--use-decimals] [--parse-dates] [--parse-enums] [--client-id CLIENT-ID]
                    [--client-secret CLIENT-SECRET] [--username USERNAME] [--password PASSWORD]
-                   [--token-cache TOKEN-CACHE] [--min-bid MIN-BID] [--strategy STRATEGY]
-                   [--verbose] [--dry-run] [--simulate]
+                   [--token-cache TOKEN-CACHE] [--min-bid MIN-BID]
+                   [--strategy {AGGRESSIVE,CONSERVATIVE}] [--verbose] [--dry-run] [--simulate]
 
 options:
   -h, --help            show this help message and exit
@@ -81,7 +81,8 @@ auth:
 bot:
 
   --min-bid MIN-BID     Minimum amount of a loan to purchase.; Type: Decimal; Default: 25.00
-  --strategy STRATEGY   Strategy for balancing your portfolio.; Type: str; Default: AGGRESSIVE
+  --strategy {AGGRESSIVE,CONSERVATIVE}
+                        Strategy for balancing your portfolio.; Type: str; Default: AGGRESSIVE
 
 cli:
 
