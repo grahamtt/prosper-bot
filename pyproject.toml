@@ -15,7 +15,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
 prosper-api = {version = "^0.7.3", extras = ["secure"]}
-prosper-shared = "^0.1.44"
+prosper-shared = "^0.1.47"
 pytz = "^2023.3.post1"
 humanize = "^4.8.0"
 backoff = "^2.2.1"
@@ -30,6 +30,7 @@ prosper-shared = { version = ">0", extras = ["dev"] }
 mode = "poetry"
 pre-commit = [
     "prosper_shared.autohooks.clean",
+    "prosper_shared.autohooks.build_extras",
     "prosper_shared.autohooks.autoimport",
     "autohooks.plugins.black",
     "autohooks.plugins.ruff",
@@ -46,6 +47,12 @@ pre-commit = [
     "prosper_shared.autohooks.build",
     "prosper_shared.autohooks.assert_files",
 ]
+
+[tool.autohooks.plugins.build_extras]
+commands = [
+    "jinja2 -Dcli_options=\"`prosper-bot -h`\" README.md.jinja2 > README.md"
+]
+affected_files = ['README.md']
 
 [tool.autohooks.plugins.mutmut]
 arguments = [
