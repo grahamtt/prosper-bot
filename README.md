@@ -53,10 +53,7 @@ usage: prosper-bot [-h] [--use-decimals | --no-use-decimals]
 options:
   -h, --help            show this help message and exit
 
-prosper_shared:
-
 prosper_shared.serde:
-
   --use-decimals, --no-use-decimals
                         Floating point values should be parsed as decimals instead of
                         floats.; Type: bool; Default: True
@@ -68,10 +65,7 @@ prosper_shared.serde:
                         Enum values represented as strings should be parsed into their
                         respective types.; Type: bool; Default: True
 
-prosper_api:
-
 prosper_api.credentials:
-
   --client-id CLIENT-ID
                         The client-id from Prosper.; Type: str matching /^[a-f0-9]{32}$/
   --client-secret CLIENT-SECRET
@@ -82,24 +76,17 @@ prosper_api.credentials:
                         Type: str
 
 prosper_api.auth:
-
   --token-cache TOKEN-CACHE
                         The filesystem location where the auth token will be cached.; Type:
                         str; Default: /home/graham/.cache/prosper-api/token-cache
 
-prosper_bot:
-
 prosper_bot.bot:
-
   --min-bid MIN-BID     Minimum amount of a loan to purchase.; Type: Decimal; Default: 25.00
   --strategy {AGGRESSIVE,CONSERVATIVE}
                         Strategy for balancing your portfolio.; Type: str; Default:
                         AGGRESSIVE
 
-prosper_bot:
-
 prosper_bot.cli:
-
   --verbose             Prints additional debug messages.; Type: bool
   --dry-run             Run the loop but don't actually place any orders.; Type: bool
   --simulate            Run the loop as if the account had the minimum bid amount. Implies

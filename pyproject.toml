@@ -15,7 +15,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
 prosper-api = {version = "^0.8.0", extras = ["secure"]}
-prosper-shared = "^0.2.5"
+prosper-shared = "^0.2.6"
 pytz = "^2023.3.post1"
 humanize = "^4.8.0"
 backoff = "^2.2.1"
