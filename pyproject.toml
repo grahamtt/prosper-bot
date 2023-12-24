@@ -15,7 +15,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
 prosper-api = {version = "^0.8.0", extras = ["secure"]}
-prosper-shared = "^0.2.6"
+prosper-shared = "^0.2.7"
 pytz = "^2023.3.post1"
 humanize = "^4.8.0"
 backoff = "^2.2.1"
@@ -115,3 +115,6 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 prosper-bot="prosper_bot.bot.bot:runner"
+
+[tool.poetry-sort]
+move-optionals-to-bottom=true

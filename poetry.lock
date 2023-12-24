@@ -1389,13 +1389,13 @@ secure = ["keyring (>=24.2.0,<25.0.0)"]
 
 [[package]]
 name = "prosper-shared"
-version = "0.2.6"
+version = "0.2.7"
 description = ""
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "prosper_shared-0.2.6-py3-none-any.whl", hash = "sha256:d747001ef4022a145bb03a01dcefc4f6aa1965e4cd2ea1a803b3cfb3155cf9c0"},
-    {file = "prosper_shared-0.2.6.tar.gz", hash = "sha256:42298d9e42bbef6e41e91f2b2d511046800db689eadc9d44244e051e474964b8"},
+    {file = "prosper_shared-0.2.7-py3-none-any.whl", hash = "sha256:0d76f43c61d08b5b85eee6ef5d11491e5a32bac67be64c9e3210d978fde2a09a"},
+    {file = "prosper_shared-0.2.7.tar.gz", hash = "sha256:83ee53a9abf69c53da421647423f497c7cda94a8e490b8e33eaf615c81b13207"},
 ]
 
 [package.dependencies]
@@ -1410,19 +1410,20 @@ dpath = ">=2.1.6,<3.0.0"
 jinja2-cli = {version = ">=0.8.2,<0.9.0", optional = true, markers = "extra == \"dev\""}
 mdformat-gfm = {version = ">=0.3.5,<0.4.0", optional = true, markers = "extra == \"dev\""}
 mutmut = {version = ">=2.4.4,<3.0.0", optional = true, markers = "extra == \"dev\""}
+platformdirs = ">=4.1.0,<5.0.0"
 pydoclint = {version = ">=0.3.8,<0.4.0", optional = true, markers = "extra == \"dev\""}
 pydocstyle = {version = ">=6.3.0,<7.0.0", optional = true, markers = "extra == \"dev\""}
 pytest = {version = ">=7.4.2,<8.0.0", optional = true, markers = "extra == \"dev\""}
 pytest-cov = {version = ">=4.1.0,<5.0.0", optional = true, markers = "extra == \"dev\""}
 pytest-mock = {version = ">=3.11.1,<4.0.0", optional = true, markers = "extra == \"dev\""}
 pytest-sugar = {version = ">=0.9.7,<0.10.0", optional = true, markers = "extra == \"dev\""}
-pyyaml = {version = ">=6.0.1,<7.0.0", optional = true, markers = "extra == \"yaml\""}
+pyyaml = {version = ">=6.0.1,<7.0.0", optional = true, markers = "extra == \"dev\" or extra == \"yaml\""}
 schema = ">=0.7.5,<0.8.0"
 toml-sort = {version = ">=0.23.1,<0.24.0", optional = true, markers = "extra == \"dev\""}
 tox = {version = ">=4.11.3,<5.0.0", optional = true, markers = "extra == \"dev\""}
 
 [package.extras]
-dev = ["autohooks (>=23.10.0,<24.0.0)", "autohooks-plugin-black (>=23.10.0,<24.0.0)", "autohooks-plugin-isort (>=23.10.0,<24.0.0)", "autohooks-plugin-pytest (>=23.10.0,<24.0.0)", "autohooks-plugin-ruff (>=23.11.0,<24.0.0)", "autoimport (>=1.3.3,<2.0.0)", "jinja2-cli (>=0.8.2,<0.9.0)", "mdformat-gfm (>=0.3.5,<0.4.0)", "mutmut (>=2.4.4,<3.0.0)", "pydoclint (>=0.3.8,<0.4.0)", "pydocstyle (>=6.3.0,<7.0.0)", "pytest (>=7.4.2,<8.0.0)", "pytest-cov (>=4.1.0,<5.0.0)", "pytest-mock (>=3.11.1,<4.0.0)", "pytest-sugar (>=0.9.7,<0.10.0)", "toml-sort (>=0.23.1,<0.24.0)", "tox (>=4.11.3,<5.0.0)"]
+dev = ["autohooks (>=23.10.0,<24.0.0)", "autohooks-plugin-black (>=23.10.0,<24.0.0)", "autohooks-plugin-isort (>=23.10.0,<24.0.0)", "autohooks-plugin-pytest (>=23.10.0,<24.0.0)", "autohooks-plugin-ruff (>=23.11.0,<24.0.0)", "autoimport (>=1.3.3,<2.0.0)", "jinja2-cli (>=0.8.2,<0.9.0)", "mdformat-gfm (>=0.3.5,<0.4.0)", "mutmut (>=2.4.4,<3.0.0)", "pydoclint (>=0.3.8,<0.4.0)", "pydocstyle (>=6.3.0,<7.0.0)", "pytest (>=7.4.2,<8.0.0)", "pytest-cov (>=4.1.0,<5.0.0)", "pytest-mock (>=3.11.1,<4.0.0)", "pytest-sugar (>=0.9.7,<0.10.0)", "pyyaml (>=6.0.1,<7.0.0)", "toml-sort (>=0.23.1,<0.24.0)", "tox (>=4.11.3,<5.0.0)"]
 toml = ["toml (>=0.10.2,<0.11.0)"]
 yaml = ["pyyaml (>=6.0.1,<7.0.0)"]
 
@@ -2213,4 +2214,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0"
-content-hash = "5050a0d28f41af19190eb0227717ed3ca0aa658973f198a3612d59a6a61804a4"
+content-hash = "e50c42f6ec57237443917447bb2a25e45fedc82553b5c1df7f427ee4e35d7f81"
