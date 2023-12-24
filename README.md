@@ -43,7 +43,8 @@ prosper-bot
 Prosper bot exposes all the config options from `prosper-api`, plus the options in the `bot` and `cli` sections below.
 
 ```
-usage: prosper-bot [-h] [--use-decimals] [--parse-dates] [--parse-enums] [--client-id CLIENT-ID]
+usage: prosper-bot [-h] [--use-decimals | --no-use-decimals] [--parse-dates | --no-parse-dates]
+                   [--parse-enums | --no-parse-enums] [--client-id CLIENT-ID]
                    [--client-secret CLIENT-SECRET] [--username USERNAME] [--password PASSWORD]
                    [--token-cache TOKEN-CACHE] [--min-bid MIN-BID]
                    [--strategy {AGGRESSIVE,CONSERVATIVE}] [--verbose] [--dry-run] [--simulate]
@@ -55,12 +56,15 @@ prosper_shared:
 
 prosper_shared.serde:
 
-  --use-decimals        Floating point values should be parsed as decimals instead of floats.;
+  --use-decimals, --no-use-decimals
+                        Floating point values should be parsed as decimals instead of floats.;
                         Type: bool; Default: True
-  --parse-dates         Date values represented as strings should be parsed into `date` and
+  --parse-dates, --no-parse-dates
+                        Date values represented as strings should be parsed into `date` and
                         `datetime` objects. Supports ISO-8601-compliant date strings.; Type: bool;
                         Default: True
-  --parse-enums         Enum values represented as strings should be parsed into their respective
+  --parse-enums, --no-parse-enums
+                        Enum values represented as strings should be parsed into their respective
                         types.; Type: bool; Default: True
 
 prosper_api:
@@ -94,9 +98,8 @@ prosper_bot:
 
 prosper_bot.cli:
 
-  --verbose             Prints additional debug messages.; Type: bool; Default: False
-  --dry-run             Run the loop but don't actually place any orders.; Type: bool; Default:
-                        False
+  --verbose             Prints additional debug messages.; Type: bool
+  --dry-run             Run the loop but don't actually place any orders.; Type: bool
   --simulate            Run the loop as if the account had the minimum bid amount. Implies `dry-
-                        run`.; Type: bool; Default: False
+                        run`.; Type: bool
 ```
