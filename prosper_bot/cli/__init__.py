@@ -30,4 +30,4 @@ def _schema():
 
 def build_config() -> Config:
     """Compiles all the config sources into a single config."""
-    return Config.autoconfig(["prosper-api", "prosper-bot"], validate=True)
+    return Config.autoconfig(validate=True)
