@@ -8,7 +8,7 @@ SIMULATE_CONFIG = "cli.simulate"
 @input_schema
 def _schema():
     return {
-        "prosper_bot": {
+        "prosper-bot": {
             "cli": {
                 ConfigKey(
                     "verbose", "Prints additional debug messages.", default=False

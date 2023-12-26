@@ -43,5 +43,52 @@ prosper-bot
 Prosper bot exposes all the config options from `prosper-api`, plus the options in the `bot` and `cli` sections below.
 
 ```
+usage: prosper-bot [-h] [--use-decimals | --no-use-decimals]
+                   [--parse-dates | --no-parse-dates] [--parse-enums | --no-parse-enums]
+                   [--client-id CLIENT-ID] [--client-secret CLIENT-SECRET]
+                   [--username USERNAME] [--password PASSWORD] [--token-cache TOKEN-CACHE]
+                   [--min-bid MIN-BID] [--strategy {AGGRESSIVE,CONSERVATIVE}] [--verbose]
+                   [--dry-run] [--simulate]
 
+options:
+  -h, --help            show this help message and exit
+
+prosper-shared.serde:
+  --use-decimals, --no-use-decimals
+                        Floating point values should be parsed as decimals instead of
+                        floats.; Type: bool; Default: True
+  --parse-dates, --no-parse-dates
+                        Date values represented as strings should be parsed into `date` and
+                        `datetime` objects. Supports ISO-8601-compliant date strings.; Type:
+                        bool; Default: True
+  --parse-enums, --no-parse-enums
+                        Enum values represented as strings should be parsed into their
+                        respective types.; Type: bool; Default: True
+
+prosper-api.credentials:
+  --client-id CLIENT-ID
+                        The client-id from Prosper.; Type: str matching /^[a-f0-9]{32}$/
+  --client-secret CLIENT-SECRET
+                        The client-secret from Prosper; can be configured using the keyring
+                        library.; Type: str matching /^[a-f0-9]{32}$/
+  --username USERNAME   Your Prosper username; Type: str
+  --password PASSWORD   Your Prosper password; can be configured using the keyring library.;
+                        Type: str
+
+prosper-api.auth:
+  --token-cache TOKEN-CACHE
+                        The filesystem location where the auth token will be cached.; Type:
+                        str; Default: /home/graham/.cache/prosper-api/token-cache
+
+prosper-bot.bot:
+  --min-bid MIN-BID     Minimum amount of a loan to purchase.; Type: Decimal; Default: 25.00
+  --strategy {AGGRESSIVE,CONSERVATIVE}
+                        Strategy for balancing your portfolio.; Type: str; Default:
+                        AGGRESSIVE
+
+prosper-bot.cli:
+  --verbose             Prints additional debug messages.; Type: bool
+  --dry-run             Run the loop but don't actually place any orders.; Type: bool
+  --simulate            Run the loop as if the account had the minimum bid amount. Implies
+                        `dry-run`.; Type: bool
 ```

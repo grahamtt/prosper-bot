@@ -35,7 +35,7 @@ POLL_TIME = timedelta(minutes=1)
 @config_schema
 def _schema():
     return {
-        "prosper_bot": {
+        "prosper-bot": {
             "bot": {
                 ConfigKey(
                     "min-bid",

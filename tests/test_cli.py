@@ -28,25 +28,25 @@ class TestCli:
 
         config = build_config()
 
-        assert config._config_dict["prosper_bot"]["bot"] == pytest.approx(
+        assert config._config_dict["prosper-bot"]["bot"] == pytest.approx(
             {
                 "min-bid": Decimal("25"),
                 "strategy": FixedTargetAllocationStrategyTargets.AGGRESSIVE,
             }
         )
-        assert config._config_dict["prosper_bot"]["cli"] == {
+        assert config._config_dict["prosper-bot"]["cli"] == {
             "dry-run": False,
             "verbose": False,
             "simulate": False,
         }
-        assert config._config_dict["prosper_api"] == {
+        assert config._config_dict["prosper-api"] == {
             "auth": {"token-cache": "fake-token-cache"},
             "credentials": {
                 "client-id": "0123456789abcdef0123456789abcdef",
                 "username": "fake-username",
             },
         }
-        assert config._config_dict["prosper_shared"] == {
+        assert config._config_dict["prosper-shared"] == {
             "serde": {"parse-dates": True, "parse-enums": True, "use-decimals": True}
         }
 
@@ -68,24 +68,24 @@ class TestCli:
 
         config = build_config()
 
-        assert config._config_dict["prosper_bot"]["bot"] == pytest.approx(
+        assert config._config_dict["prosper-bot"]["bot"] == pytest.approx(
             {
                 "min-bid": Decimal("30"),
                 "strategy": FixedTargetAllocationStrategyTargets.CONSERVATIVE,
             }
         )
-        assert config._config_dict["prosper_bot"]["cli"] == {
+        assert config._config_dict["prosper-bot"]["cli"] == {
             "dry-run": True,
             "verbose": True,
             "simulate": False,
         }
-        assert config._config_dict["prosper_api"] == {
+        assert config._config_dict["prosper-api"] == {
             "auth": {"token-cache": "fake-token-cache"},
             "credentials": {
                 "client-id": "0123456789abcdef0123456789abcdef",
                 "username": "fake-username",
             },
         }
-        assert config._config_dict["prosper_shared"] == {
+        assert config._config_dict["prosper-shared"] == {
             "serde": {"parse-dates": True, "parse-enums": True, "use-decimals": True}
         }

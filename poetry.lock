@@ -1364,21 +1364,20 @@ files = [
 
 [[package]]
 name = "prosper-api"
-version = "0.8.0"
+version = "0.8.2"
 description = "Python trading library for Prosper.com"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "prosper_api-0.8.0-py3-none-any.whl", hash = "sha256:1245e63caac7a57d7081298383c39bbd39bbbdb446a69aa08c60da9fce13d80a"},
-    {file = "prosper_api-0.8.0.tar.gz", hash = "sha256:e0c137c69b4e083cbe51ecc707f32c1365cddf91cfb8f8d84661e8e36f4fb421"},
+    {file = "prosper_api-0.8.2-py3-none-any.whl", hash = "sha256:1125a7b133ea9d9aa708e4b2fff0f677089e6fb3c8e6d2cf8505354658b21140"},
+    {file = "prosper_api-0.8.2.tar.gz", hash = "sha256:acc79fa85c828ff1b2eb394073f4f86443f9900134a4fa9e4767c79a98d7e5da"},
 ]
 
 [package.dependencies]
 backoff = ">=2.2.1,<3.0.0"
 dpath = ">=2.1.6,<3.0.0"
 keyring = {version = ">=24.2.0,<25.0.0", optional = true, markers = "extra == \"secure\""}
-platformdirs = ">=4.0.0,<5.0.0"
-prosper-shared = ">=0.2.1,<0.3.0"
+prosper-shared = ">=0.2.9,<0.3.0"
 ratelimit = ">=2.2.1,<3.0.0"
 requests = ">=2.31.0,<3.0.0"
 schema = ">=0.7.5,<0.8.0"
@@ -1389,13 +1388,13 @@ secure = ["keyring (>=24.2.0,<25.0.0)"]
 
 [[package]]
 name = "prosper-shared"
-version = "0.2.8"
+version = "0.2.9"
 description = ""
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "prosper_shared-0.2.8-py3-none-any.whl", hash = "sha256:3215366bed4f49bdc614f902c989bf6867a419a4134cf0eb47d945a0a5bba755"},
-    {file = "prosper_shared-0.2.8.tar.gz", hash = "sha256:40c091537383bcc6c54fee32a843a3d52f42246fa0ef2f6b39676fb0fee98878"},
+    {file = "prosper_shared-0.2.9-py3-none-any.whl", hash = "sha256:76231e4b3bcb9c113d7a7b8f71628e143a0c2539d140be9a9d90bfada23a9fc2"},
+    {file = "prosper_shared-0.2.9.tar.gz", hash = "sha256:0cae480dff3434d6fa98ab9ba3fd117f6fb3abb4a0b9ad8595fbf87f28b32fb5"},
 ]
 
 [package.dependencies]
@@ -2214,4 +2213,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0"
-content-hash = "8b4c00b303ff32db82798990e191a9590184a66bb2d8c6914a1c145b5ce0ae3e"
+content-hash = "525d71c96d5e94b2dec3ac3166bf01bfad211c765e7f71f7bf7e30f1840d2e90"
