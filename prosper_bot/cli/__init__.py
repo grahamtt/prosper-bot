@@ -1,8 +1,8 @@
 from prosper_shared.omni_config import Config, ConfigKey, input_schema
 
-DRY_RUN_CONFIG = "cli.dry-run"
-VERBOSE_CONFIG = "cli.verbose"
-SIMULATE_CONFIG = "cli.simulate"
+DRY_RUN_CONFIG = "prosper-bot.cli.dry-run"
+VERBOSE_CONFIG = "prosper-bot.cli.verbose"
+SIMULATE_CONFIG = "prosper-bot.cli.simulate"
 
 
 @input_schema
