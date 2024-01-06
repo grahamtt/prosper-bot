@@ -5,20 +5,11 @@ from time import sleep
 
 import humanize
 import simplejson as json
-from humanize import naturaldelta
 from prosper_api.client import Client
 from prosper_shared.omni_config import ConfigKey, config_schema
 
-from prosper_bot.allocation_strategy.fixed_target import (
-    FixedTargetAllocationStrategy,
-    FixedTargetAllocationStrategyTargets,
-)
-from prosper_bot.cli import (
-    DRY_RUN_CONFIG,
-    SIMULATE_CONFIG,
-    VERBOSE_CONFIG,
-    build_config,
-)
+from prosper_bot.allocation_strategy import AllocationStrategies
+from prosper_bot.cli import DRY_RUN_CONFIG, VERBOSE_CONFIG, build_config
 
 logger = logging.getLogger(__file__)
 
@@ -26,8 +17,8 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)-8s %(message)s", level=logging.INFO
 )
 
-MIN_BID_CONFIG = "bot.min_bid"
-STRATEGY_CONFIG = "bot.strategy"
+MIN_BID_CONFIG = "prosper-bot.bot.min_bid"
+STRATEGY_CONFIG = "prosper-bot.bot.strategy"
 
 POLL_TIME = timedelta(minutes=1)
 
@@ -45,8 +36,8 @@ def _schema():
                 ConfigKey(
                     "strategy",
                     "Strategy for balancing your portfolio.",
-                    default=FixedTargetAllocationStrategyTargets.AGGRESSIVE,
-                ): FixedTargetAllocationStrategyTargets,
+                    default=AllocationStrategies.AGGRESSIVE,
+                ): AllocationStrategies,
             }
         }
     }
@@ -54,6 +45,8 @@ def _schema():
 
 class Bot:
     """Prosper trading bot."""
+
+    strategy: AllocationStrategies
 
     def __init__(self, config=None):
         """Initializes the bot with the given argument values."""
@@ -65,20 +58,16 @@ class Bot:
             logger.setLevel(logging.DEBUG)
 
         self.client = Client(config=self.config)
-        self.simulate = self.config.get_as_bool(SIMULATE_CONFIG, False)
-        self.dry_run = self.config.get_as_bool(DRY_RUN_CONFIG) or self.simulate
+        self.dry_run = self.config.get_as_bool(DRY_RUN_CONFIG)
         self.min_bid = self.config.get_as_decimal(MIN_BID_CONFIG, Decimal(25.00))
-        self.targets = self.config.get_as_enum(
-            STRATEGY_CONFIG, FixedTargetAllocationStrategyTargets
-        )
+        self.strategy = self.config.get_as_enum(STRATEGY_CONFIG, AllocationStrategies)
 
     def run(self):
         """Main loop for the trading bot."""
-        cash = None
         sleep_time_delta = POLL_TIME
         while True:
             try:
-                cash, sleep_time_delta = self._do_run(cash)
+                sleep_time_delta = self._do_run()
             except KeyboardInterrupt:
                 logger.info("Interrupted...")
                 break
@@ -90,21 +79,12 @@ class Bot:
 
             sleep(sleep_time_delta.total_seconds())
 
-    def _do_run(self, cash):
+    def _do_run(self):
         account = self.client.get_account_info()
         logger.debug(json.dumps(account, indent=2, default=str))
-        new_cash = self.min_bid if self.simulate else account.available_cash_balance
-        if cash is not None and cash == new_cash:
-            return cash, POLL_TIME
 
-        cash = new_cash
-
-        # TODO: Support other allocation strategies
-        #   The allocation strategies are designed to be flexible, but that's not possible if we hard-code the strategy
-        #   class.
-        allocation_strategy = FixedTargetAllocationStrategy(
-            self.client, account, targets=self.targets
-        )
+        cash = account.available_cash_balance
+        allocation_strategy = self.strategy.to_strategy(self.client, account)
 
         invest_amount = self._get_bid_amount(cash, self.min_bid)
         if invest_amount or self.dry_run:
@@ -128,9 +108,8 @@ class Bot:
             sleep_time_delta = timedelta(seconds=5)
         else:
             sleep_time_delta = POLL_TIME
-            logger.info(f"Starting polling every {naturaldelta(sleep_time_delta)}")
 
-        return cash, sleep_time_delta
+        return sleep_time_delta
 
     @staticmethod
     def _get_bid_amount(cash, min_bid):

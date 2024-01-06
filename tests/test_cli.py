@@ -3,9 +3,7 @@ from decimal import Decimal
 
 import pytest
 
-from prosper_bot.allocation_strategy.fixed_target import (
-    FixedTargetAllocationStrategyTargets,
-)
+from prosper_bot.allocation_strategy import AllocationStrategies
 from prosper_bot.bot import bot
 from prosper_bot.cli import build_config
 
@@ -31,13 +29,12 @@ class TestCli:
         assert config._config_dict["prosper-bot"]["bot"] == pytest.approx(
             {
                 "min-bid": Decimal("25"),
-                "strategy": FixedTargetAllocationStrategyTargets.AGGRESSIVE,
+                "strategy": AllocationStrategies.AGGRESSIVE,
             }
         )
         assert config._config_dict["prosper-bot"]["cli"] == {
             "dry-run": False,
             "verbose": False,
-            "simulate": False,
         }
         assert config._config_dict["prosper-api"] == {
             "auth": {"token-cache": "fake-token-cache"},
@@ -71,13 +68,12 @@ class TestCli:
         assert config._config_dict["prosper-bot"]["bot"] == pytest.approx(
             {
                 "min-bid": Decimal("30"),
-                "strategy": FixedTargetAllocationStrategyTargets.CONSERVATIVE,
+                "strategy": AllocationStrategies.CONSERVATIVE,
             }
         )
         assert config._config_dict["prosper-bot"]["cli"] == {
             "dry-run": True,
             "verbose": True,
-            "simulate": False,
         }
         assert config._config_dict["prosper-api"] == {
             "auth": {"token-cache": "fake-token-cache"},

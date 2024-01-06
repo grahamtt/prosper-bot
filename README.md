@@ -47,8 +47,9 @@ usage: prosper-bot [-h] [--use-decimals | --no-use-decimals]
                    [--parse-dates | --no-parse-dates] [--parse-enums | --no-parse-enums]
                    [--client-id CLIENT-ID] [--client-secret CLIENT-SECRET]
                    [--username USERNAME] [--password PASSWORD] [--token-cache TOKEN-CACHE]
-                   [--min-bid MIN-BID] [--strategy {AGGRESSIVE,CONSERVATIVE}] [--verbose]
-                   [--dry-run] [--simulate]
+                   [--min-bid MIN-BID]
+                   [--strategy {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}] [--verbose]
+                   [--dry-run]
 
 options:
   -h, --help            show this help message and exit
@@ -82,13 +83,11 @@ prosper-api.auth:
 
 prosper-bot.bot:
   --min-bid MIN-BID     Minimum amount of a loan to purchase.; Type: Decimal; Default: 25.00
-  --strategy {AGGRESSIVE,CONSERVATIVE}
+  --strategy {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}
                         Strategy for balancing your portfolio.; Type: str; Default:
                         AGGRESSIVE
 
 prosper-bot.cli:
   --verbose             Prints additional debug messages.; Type: bool
   --dry-run             Run the loop but don't actually place any orders.; Type: bool
-  --simulate            Run the loop as if the account had the minimum bid amount. Implies
-                        `dry-run`.; Type: bool
 ```

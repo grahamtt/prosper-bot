@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "prosper-bot"
-version = "0.3.9-pre.2"
+version = "0"
 description = ""
 authors = ["Graham Tibbitts <graham.tibbitts@gmail.com>"]
 readme = "README.md"
@@ -18,7 +18,7 @@ backoff = "^2.2.1"
 black = "^23.11.0"
 humanize = "^4.8.0"
 prosper-api = {version = "^0.8.2", extras = ["secure"]}
-prosper-shared = "^0.2.10"
+prosper-shared = "^0.2.11"
 pytz = "^2023.3.post1"
 simplejson = "^3.19.2"
 
@@ -95,9 +95,12 @@ convention = "google"
 add_ignore = ['D100', 'D104']
 
 [tool.pytest.ini_options]
-addopts = "--cov=prosper_bot --cov-report=term-missing --cov-report=lcov:dist/coverage.info --cov-report=html:dist/coveragereport --nlcov-revision origin/main --nlcov-fail-under=100"
+addopts = "--cov=prosper_bot --cov-report=term-missing --cov-report=lcov:dist/coverage.info --cov-report=html:dist/coveragereport --nlcov-revision main --nlcov-fail-under=100"
 testpaths = "tests"
 python_functions = ["*_test", "test_*"]
+
+[tool.coverage.report]
+exclude_lines = ["if __name__ == .__main__.:", "\\s*Bot\\S*run.\\S*"]
 
 [tool.ruff.lint]
 extend-ignore = ["E501"]

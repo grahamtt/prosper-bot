@@ -2,7 +2,6 @@ from prosper_shared.omni_config import Config, ConfigKey, input_schema
 
 DRY_RUN_CONFIG = "prosper-bot.cli.dry-run"
 VERBOSE_CONFIG = "prosper-bot.cli.verbose"
-SIMULATE_CONFIG = "prosper-bot.cli.simulate"
 
 
 @input_schema
@@ -16,11 +15,6 @@ def _schema():
                 ConfigKey(
                     "dry-run",
                     "Run the loop but don't actually place any orders.",
-                    default=False,
-                ): bool,
-                ConfigKey(
-                    "simulate",
-                    "Run the loop as if the account had the minimum bid amount. Implies `dry-run`.",
                     default=False,
                 ): bool,
             }

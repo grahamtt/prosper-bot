@@ -5,7 +5,10 @@ import pytest
 from prosper_api.client import Client
 from prosper_api.models import Account, AmountsByRating
 
-from prosper_bot.allocation_strategy.fixed_target import FixedTargetAllocationStrategy
+from prosper_bot.allocation_strategy import (
+    AllocationStrategies,
+    FixedTargetAllocationStrategy,
+)
 
 
 class TestFixedTarget:
@@ -46,11 +49,11 @@ class TestFixedTarget:
 
     @pytest.fixture
     def mock_client(self, mocker) -> Client:
-        return mocker.patch("prosper_bot.allocation_strategy.fixed_target.Client")
+        return mocker.patch("prosper_bot.allocation_strategy.Client")
 
     def test_fixed_target_allocation_strategy(self, mock_client):
         allocation_strategy = FixedTargetAllocationStrategy(
-            mock_client, self.TEST_ACCOUNT
+            mock_client, self.TEST_ACCOUNT, AllocationStrategies.AGGRESSIVE.value[1]
         )
 
         assert [r.prosper_rating for r in allocation_strategy._search_requests] == [
