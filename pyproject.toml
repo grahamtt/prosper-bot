@@ -79,7 +79,7 @@ profile = "black"
 disable-mutation-types = "string,fstring,expr_stmt,annassign,number"
 
 [tool.poetry-dynamic-versioning]
-enable = false
+enable = true
 metadata = false
 style = "semver"
 vcs = "git"
