@@ -5,7 +5,15 @@ from logging import getLogger
 from typing import Callable, Dict, Iterable, Iterator, NamedTuple, Optional, Union
 
 from prosper_api.client import Client
-from prosper_api.models import Account, Listing, SearchListingsRequest
+from prosper_api.models import Listing, SearchListingsRequest
+
+_BASE_REQUEST = SearchListingsRequest(
+    limit=10,
+    biddable=True,
+    invested=False,
+    sort_by="lender_yield",
+    sort_dir="desc",
+)
 
 __all__ = [
     "AllocationStrategy",
@@ -128,17 +136,16 @@ class FixedTargetAllocationStrategy(AllocationStrategy):
     def __init__(
         self,
         client: Client,
-        account: Account,
         targets: Dict[str, Decimal],
     ):
         """Instantiates a FixedTargetAllocationStrategy.
 
         Args:
             client (Client): The prosper API client.
-            account (Account): Represents the current status of the Prosper account.
             targets (Dict[str, Decimal]): The target allocations by prosper rating.
         """
         buckets = {}
+        account = client.get_account_info()
         invested_notes = account.invested_notes._asdict()
         pending_bids = account.pending_bids._asdict()
         total_account_value = account.total_account_value
@@ -175,17 +182,14 @@ class FixedTargetAllocationStrategy(AllocationStrategy):
             )
 
         grade_buckets_sorted_by_error_pct = sorted(
-            buckets.items(), key=lambda v: v[1].error_pct, reverse=True
+            (i for i in buckets.items() if i[0] in targets.keys()),
+            key=lambda v: v[1].error_pct,
+            reverse=True,
         )
 
         self._search_requests = [
             SearchListingsRequest(
-                limit=10,
-                biddable=True,
-                invested=False,
-                prosper_rating=[b[0]],
-                sort_by="lender_yield",
-                sort_dir="desc",
+                **{**_BASE_REQUEST._asdict(), "prosper_rating": [b[0]]},
             )
             for b in grade_buckets_sorted_by_error_pct
         ]
@@ -196,20 +200,13 @@ class FixedTargetAllocationStrategy(AllocationStrategy):
 class HighestMatchingRateAllocationStrategy(AllocationStrategy):
     """Allocation strategy that greedily takes the listing with the highest lender yield."""
 
-    def __init__(
-        self,
-        client: Client,
-        account: Account,
-        request: SearchListingsRequest = SearchListingsRequest(),
-    ):
+    def __init__(self, client: Client, request: SearchListingsRequest):
         """Creates a new allocation strategy.
 
         Args:
             client (Client): Prosper client
-            account (Account): Prosper account info
             request (SearchListingsRequest): Base request for searching
         """
-        logger.debug(f"Ignoring account {account}")
         self._search_requests = [request]
         super().__init__(client, iter(self._search_requests))
 
@@ -227,19 +224,18 @@ class AllocationStrategies(Enum):
     )
     OVERALL_HIGHEST_RATE = (
         HighestMatchingRateAllocationStrategy,
-        SearchListingsRequest(),
+        _BASE_REQUEST,
     )
 
     def __str__(self):
         """Return the name of the enum to make it more palatable in the CLI help."""
         return self.name
 
-    def to_strategy(self, client: Client, account: Account) -> AllocationStrategy:
+    def to_strategy(self, client: Client) -> AllocationStrategy:
         """Converts the enum into a strategy, given a client and an account.
 
         Args:
             client (Client): Prosper client
-            account (Account): Prosper account info
 
         Returns:
             AllocationStrategy: Allocation strategy matching the inputs.
@@ -247,4 +243,4 @@ class AllocationStrategies(Enum):
         cls = self.value[0]
         args = self.value[1:]
 
-        return cls(client, account, *args)
+        return cls(client, *args)

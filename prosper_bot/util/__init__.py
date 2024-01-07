@@ -7,6 +7,26 @@ import black
 logger = logging.getLogger(__file__)
 
 
+def repr_lambda(v: Any):
+    """Intended to be able to get the raw representation of an object including the source of a lambda."""
+    # if callable(v):
+    #     return next(src_line for src_line in inspect.getsourcelines(v) if "lambda: " in src_line).replace(r".*lambda:", "lambda:")
+    #
+    # if isinstance(v, dict):
+    #     return '{' + ', '.join(f"{k}: {repr_lambda(v)}" for k,v in v.items()) + '}'
+    #
+    # if isinstance(v, (list, tuple, set)):
+    #     str_val = ', '.join(repr_lambda(v) for v in v)
+    #     if isinstance(v, list):
+    #         return '[' + str_val + ']'
+    #     if isinstance(v, tuple):
+    #         return '(' + str_val + ')'
+    #     if isinstance(v, set):
+    #         return '{' + str_val + '}'
+
+    return repr(v)
+
+
 def ppprint(o: Any) -> str:
     """Uses `black` to pretty-print Python objects.
 
@@ -16,7 +36,7 @@ def ppprint(o: Any) -> str:
     Returns:
         str: A formatted string representation of the value
     """
-    return black.format_str(repr(o), mode=black.Mode())
+    return black.format_file_contents(repr_lambda(o), fast=False, mode=black.Mode())
 
 
 def bucketize(
@@ -33,7 +53,7 @@ def bucketize(
     Arguments:
         input (Iterable[Any]): the collection of items to bucketize.
         bucketizer (Callable[[Any], Hashable]): A method to extract the key from the provided items. Defaults to return the item itself.
-        evaluator (Callable[[Any], Number]): A method to extract the value from the provieded items. Defaults to return a count of the items.
+        evaluator (Callable[[Any], Number]): A method to extract the value from the provided items. Defaults to return a count of the items.
 
     Returns:
         Dict[Hashable, Number]: The result of summing the values into the calculated buckets.

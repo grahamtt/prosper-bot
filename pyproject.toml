@@ -24,7 +24,6 @@ simplejson = "^3.19.2"
 
 [tool.poetry.group.dev.dependencies]
 prosper-shared = { version = ">0.2.0", extras = ["dev", "yaml"] }
-pytest-nlcov = "^0.2.0"
 pytest-timeout = "^2.2.0"
 
 [tool.autohooks]
@@ -95,7 +94,7 @@ convention = "google"
 add_ignore = ['D100', 'D104']
 
 [tool.pytest.ini_options]
-addopts = "--cov=prosper_bot --cov-report=term-missing --cov-report=lcov:dist/coverage.info --cov-report=html:dist/coveragereport --nlcov-revision HEAD --nlcov-fail-under=100"
+addopts = "--cov=prosper_bot --cov-report=term-missing --cov-report=lcov:dist/coverage.info --cov-report=html:dist/coveragereport --cov-fail-under=100"
 testpaths = "tests"
 python_functions = ["*_test", "test_*"]
 

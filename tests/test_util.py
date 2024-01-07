@@ -1,6 +1,9 @@
+import datetime
+from decimal import Decimal
+
 import pytest
 
-from prosper_bot.util import bucketize, print_histogram
+from prosper_bot.util import bucketize, ppprint, print_histogram
 
 
 class TestUtils:
@@ -78,3 +81,23 @@ class TestUtils:
             mocker.call("b: ######### 9.00"),
             mocker.call("c: ### 3.00"),
         ]
+
+    def test_ppprint(self):
+        assert ppprint(
+            {
+                "dateval": datetime.datetime(2024, 1, 6, 13, 37, 45, 510548),
+                # "lambdaval": lambda: 45,
+                "dictval": {"k1": "v1", "k2": "v2"},
+                "intval": 1234,
+                "floatval": 1234.5678,
+                "decimalval": Decimal("1234.5678"),
+            }
+        ) == (
+            "{\n"
+            '    "dateval": datetime.datetime(2024, 1, 6, 13, 37, 45, 510548),\n'
+            '    "dictval": {"k1": "v1", "k2": "v2"},\n'
+            '    "intval": 1234,\n'
+            '    "floatval": 1234.5678,\n'
+            '    "decimalval": Decimal("1234.5678"),\n'
+            "}\n"
+        )

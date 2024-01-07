@@ -84,7 +84,7 @@ class Bot:
         logger.debug(json.dumps(account, indent=2, default=str))
 
         cash = account.available_cash_balance
-        allocation_strategy = self.strategy.to_strategy(self.client, account)
+        allocation_strategy = self.strategy.to_strategy(self.client)
 
         invest_amount = self._get_bid_amount(cash, self.min_bid)
         if invest_amount or self.dry_run:

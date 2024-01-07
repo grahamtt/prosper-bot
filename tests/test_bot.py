@@ -1,6 +1,8 @@
 import datetime
 from datetime import timedelta
 from decimal import Decimal
+from os.path import join
+from tempfile import TemporaryDirectory
 
 import pytest
 from prosper_api.models import Account, Listing, Order
@@ -245,3 +247,13 @@ class TestBot:
             )
         else:
             client_mock.return_value.order.assert_not_called()
+
+    def test_init_when_config_is_none(self, mocker):
+        build_config_mock = mocker.patch("prosper_bot.bot.bot.build_config")
+        with TemporaryDirectory() as tmpdir:
+            build_config_mock.return_value.get_as_str.return_value = join(
+                tmpdir, "token_cache"
+            )
+            botty = Bot()
+
+        assert botty.config == build_config_mock.return_value
