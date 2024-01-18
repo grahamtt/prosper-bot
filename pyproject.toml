@@ -17,7 +17,7 @@ python = ">=3.9,<4.0"
 backoff = "^2.2.1"
 black = "^23.11.0"
 humanize = "^4.8.0"
-prosper-api = {version = "^0.8.2", extras = ["secure"]}
+prosper-api = {version = "^0.8.3", extras = ["secure"]}
 prosper-shared = "^0.2.11"
 pytz = "^2023.3.post1"
 simplejson = "^3.19.2"
@@ -30,6 +30,7 @@ pytest-timeout = "^2.2.0"
 mode = "poetry"
 pre-commit = [
     "prosper_shared.autohooks.clean",
+    "prosper_shared.autohooks.update_dependencies",
     "prosper_shared.autohooks.build_extras",
     "prosper_shared.autohooks.autoimport",
     "autohooks.plugins.black",
@@ -39,7 +40,6 @@ pre-commit = [
     "prosper_shared.autohooks.pydoclint",
     "prosper_shared.autohooks.tomlsort",
     "prosper_shared.autohooks.mdformat",
-    "prosper_shared.autohooks.update_dependencies",
     "autohooks.plugins.pytest",
     # "autohooks.tox", # Commenting out for now because it appears to be running only for Python 3.10
     "prosper_shared.autohooks.mutmut",

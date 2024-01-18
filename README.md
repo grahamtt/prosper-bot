@@ -70,11 +70,11 @@ prosper-api.credentials:
   --client-id CLIENT-ID
                         The client-id from Prosper.; Type: str matching /^[a-f0-9]{32}$/
   --client-secret CLIENT-SECRET
-                        The client-secret from Prosper; can be configured using the keyring
-                        library.; Type: str matching /^[a-f0-9]{32}$/
+                        The client-secret from Prosper; can be stored and accessed securely
+                        using the keyring library.; Type: str matching /^[a-f0-9]{32}$/
   --username USERNAME   Your Prosper username; Type: str
-  --password PASSWORD   Your Prosper password; can be configured using the keyring library.;
-                        Type: str
+  --password PASSWORD   Your Prosper password; can be stored and accessed securely using the
+                        keyring library.; Type: str
 
 prosper-api.auth:
   --token-cache TOKEN-CACHE
