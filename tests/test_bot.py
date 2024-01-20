@@ -57,14 +57,21 @@ class TestBot:
 
         botty.run()
 
-        do_run_mock.assert_has_calls([mocker.call(), mocker.call()])
+        do_run_mock.assert_has_calls([mocker.call(None), mocker.call(None)])
 
     @pytest.mark.parametrize(
-        ["cli_config", "bot_config", "available_cash", "expected_order_amount"],
         [
-            ({}, {}, Decimal("111.1111"), Decimal("36.1111")),
-            ({}, {}, Decimal("24.99"), None),
-            ({"dry-run": True}, {}, Decimal("24.99"), None),
+            "cli_config",
+            "bot_config",
+            "previous_cash",
+            "available_cash",
+            "expected_order_amount",
+        ],
+        [
+            ({}, {}, Decimal("111.1111"), Decimal("111.1111"), None),
+            ({}, {}, None, Decimal("111.1111"), Decimal("36.1111")),
+            ({}, {}, None, Decimal("24.99"), None),
+            ({"dry-run": True}, {}, None, Decimal("24.99"), None),
         ],
     )
     def test_do_run(
@@ -73,6 +80,7 @@ class TestBot:
         client_mock,
         cli_config,
         bot_config,
+        previous_cash,
         available_cash,
         expected_order_amount,
     ):
@@ -232,10 +240,15 @@ class TestBot:
         )
 
         botty = Bot(config)
-        sleep_time = botty._do_run()
+        cash, sleep_time = botty._do_run(previous_cash)
 
         client_mock.return_value.get_account_info.assert_called_once()
-        if available_cash > Decimal("25") or dry_run:
+        assert cash == available_cash
+        if (
+            available_cash != previous_cash
+            and available_cash > Decimal("25")
+            or dry_run
+        ):
             strategy_mock.return_value.__next__.assert_called_once()
             assert sleep_time == datetime.timedelta(seconds=5)
         else:
