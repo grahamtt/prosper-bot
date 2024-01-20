@@ -1392,13 +1392,13 @@ secure = ["keyring (>=24.2.0,<25.0.0)"]
 
 [[package]]
 name = "prosper-shared"
-version = "0.2.11"
+version = "0.2.13"
 description = ""
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "prosper_shared-0.2.11-py3-none-any.whl", hash = "sha256:0d5ef74b43a916182402cd068b14ce49b2d96721eadbd921c80bc3e74f265fac"},
-    {file = "prosper_shared-0.2.11.tar.gz", hash = "sha256:59f1fcc8b9208bb101f0a58def073250363116975195f634975183006df57d43"},
+    {file = "prosper_shared-0.2.13-py3-none-any.whl", hash = "sha256:83cb1ae693ce802442ff650ce181d64fcf74ec39d51f710d7265940643d3c9d1"},
+    {file = "prosper_shared-0.2.13.tar.gz", hash = "sha256:fc11e46aac5e2c28ba9539a3ba066a2aee8a6c362cc069d6b67c3da72999ebcb"},
 ]
 
 [package.dependencies]
@@ -2302,4 +2302,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0"
-content-hash = "25994907a04363342266cbd0c6a2f8397d67eabc2cad83da712f4e1414cd11ba"
+content-hash = "eced134445b0e4871fad9efa2515c2e6eb808b9068ca11a91decae48321c9cb9"

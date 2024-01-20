@@ -43,22 +43,21 @@ prosper-bot
 Prosper bot exposes all the config options from `prosper-api`, plus the options in the `bot` and `cli` sections below.
 
 ```
-usage: prosper-bot [-h] [--use-decimals | --no-use-decimals]
-                   [--parse-dates | --no-parse-dates] [--parse-enums | --no-parse-enums]
-                   [--client-id CLIENT-ID] [--client-secret CLIENT-SECRET]
-                   [--username USERNAME] [--password PASSWORD] [--token-cache TOKEN-CACHE]
-                   [--min-bid MIN-BID]
-                   [--strategy {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}] [--verbose]
-                   [--dry-run]
+usage: prosper-bot [-h] [-u | --use-decimals | --no-use-decimals]
+                   [-p | --parse-dates | --no-parse-dates]
+                   [--parse-enums | --no-parse-enums] [-c CLIENT-ID]
+                   [--client-secret CLIENT-SECRET] [--username USERNAME]
+                   [--password PASSWORD] [-t TOKEN-CACHE] [-m MIN-BID]
+                   [-s {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}] [-v] [-d]
 
 options:
   -h, --help            show this help message and exit
 
 prosper-shared.serde:
-  --use-decimals, --no-use-decimals
+  -u, --use-decimals, --no-use-decimals
                         Floating point values should be parsed as decimals instead of
                         floats.; Type: bool; Default: True
-  --parse-dates, --no-parse-dates
+  -p, --parse-dates, --no-parse-dates
                         Date values represented as strings should be parsed into `date` and
                         `datetime` objects. Supports ISO-8601-compliant date strings.; Type:
                         bool; Default: True
@@ -67,7 +66,7 @@ prosper-shared.serde:
                         respective types.; Type: bool; Default: True
 
 prosper-api.credentials:
-  --client-id CLIENT-ID
+  -c CLIENT-ID, --client-id CLIENT-ID
                         The client-id from Prosper.; Type: str matching /^[a-f0-9]{32}$/
   --client-secret CLIENT-SECRET
                         The client-secret from Prosper; can be stored and accessed securely
@@ -77,19 +76,20 @@ prosper-api.credentials:
                         keyring library.; Type: str
 
 prosper-api.auth:
-  --token-cache TOKEN-CACHE
+  -t TOKEN-CACHE, --token-cache TOKEN-CACHE
                         The filesystem location where the auth token will be cached.; Type:
                         str; Default: /home/graham/.cache/prosper-api/token-cache
 
 prosper-bot.bot:
-  --min-bid MIN-BID     Minimum amount of a loan to purchase.; Type: Decimal; Default: 25.00
-  --strategy {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}
+  -m MIN-BID, --min-bid MIN-BID
+                        Minimum amount of a loan to purchase.; Type: Decimal; Default: 25.00
+  -s {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}, --strategy {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}
                         Strategy for balancing your portfolio.; Type: str; Default:
                         AGGRESSIVE
 
 prosper-bot.cli:
-  --verbose             Prints additional debug messages.; Type: bool
-  --dry-run             Run the loop but don't actually place any orders.; Type: bool
+  -v, --verbose         Prints additional debug messages.; Type: bool
+  -d, --dry-run         Run the loop but don't actually place any orders.; Type: bool
 ```
 
 ## Feedback
