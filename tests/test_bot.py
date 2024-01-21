@@ -32,11 +32,17 @@ class TestBot:
             (Decimal("49.99"), Decimal("25"), Decimal("49.99")),
             (Decimal("50.00"), Decimal("25"), Decimal("25.00")),
             (Decimal("50.01"), Decimal("25"), Decimal("25.01")),
+            (Decimal("75"), Decimal("25"), Decimal("25")),
+            (Decimal("74.996866"), Decimal("25"), Decimal("49.99")),
+            (Decimal("110.886866"), Decimal("25"), Decimal("35.88")),
             # Min bid = 30
             (Decimal("50.00"), Decimal("30"), Decimal("50.00")),
             (Decimal("59.99"), Decimal("30"), Decimal("59.99")),
+            (Decimal("59.999999"), Decimal("30"), Decimal("59.99")),
             (Decimal("60.00"), Decimal("30"), Decimal("30.00")),
+            (Decimal("60.000001"), Decimal("30"), Decimal("30.00")),
             (Decimal("60.01"), Decimal("30"), Decimal("30.01")),
+            # Min bid = 27.56
             (Decimal("55.11"), Decimal("27.56"), Decimal("55.11")),
             (Decimal("55.12"), Decimal("27.56"), Decimal("27.56")),
             (Decimal("55.13"), Decimal("27.56"), Decimal("27.57")),
@@ -69,7 +75,7 @@ class TestBot:
         ],
         [
             ({}, {}, Decimal("111.1111"), Decimal("111.1111"), None),
-            ({}, {}, None, Decimal("111.1111"), Decimal("36.1111")),
+            ({}, {}, None, Decimal("111.1111"), Decimal("36.11")),
             ({}, {}, None, Decimal("24.99"), None),
             ({"dry-run": True}, {}, None, Decimal("24.99"), None),
         ],
