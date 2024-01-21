@@ -117,10 +117,12 @@ class Bot:
         return cash, sleep_time_delta
 
     @staticmethod
-    def _get_bid_amount(cash, min_bid):
+    def _get_bid_amount(cash: Decimal, min_bid: Decimal):
         if cash < min_bid:
             return 0
-        return min_bid + cash % min_bid
+        return (min_bid + cash % min_bid).quantize(
+            Decimal(".01"), rounding="ROUND_DOWN"
+        )
 
 
 def runner():
