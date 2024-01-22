@@ -99,12 +99,12 @@ class Bot:
             listing_number = listing.listing_number
             if self.dry_run:
                 logger.info(
-                    f"DRYRUN: Would have purchased ${invest_amount:5.2f} of listing {listing_number} ({listing.prosper_rating}) at {lender_yield * 100:5.2f}%"
+                    f"DRYRUN: Would have purchased ${invest_amount:5.2f} of listing {listing_number} ({listing.prosper_rating}) at {lender_yield * 100:5.2f}% for {listing.listing_term} months"
                 )
             else:
                 order_result = self.client.order(listing_number, invest_amount)
                 logging.info(
-                    f"Purchased ${invest_amount:5.2f} of {listing_number} ({listing.prosper_rating}) at {lender_yield * 100:5.2f}%"
+                    f"Purchased ${invest_amount:5.2f} of {listing_number} ({listing.prosper_rating}) at {lender_yield * 100:5.2f}% for {listing.listing_term} months"
                 )
                 logging.debug(json.dumps(order_result, indent=2, default=str))
 
