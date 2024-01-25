@@ -65,10 +65,10 @@ class Bot:
     def run(self):
         """Main loop for the trading bot."""
         sleep_time_delta = POLL_TIME
-        cash = None
+        total_value = None
         while True:
             try:
-                cash, sleep_time_delta = self._do_run(cash)
+                total_value, sleep_time_delta = self._do_run(total_value)
             except KeyboardInterrupt:
                 logger.info("Interrupted...")
                 break
@@ -80,16 +80,17 @@ class Bot:
 
             sleep(sleep_time_delta.total_seconds())
 
-    def _do_run(self, previous_cash):
+    def _do_run(self, previous_total_value):
         account = self.client.get_account_info()
         logger.debug(json.dumps(account, indent=2, default=str))
 
-        cash = account.available_cash_balance
-        if previous_cash == cash:
-            return cash, POLL_TIME
+        total_value = account.total_account_value
+        if previous_total_value == total_value:
+            return total_value, POLL_TIME
 
         allocation_strategy = self.strategy.to_strategy(self.client)
 
+        cash = account.available_cash_balance
         invest_amount = self._get_bid_amount(cash, self.min_bid)
         if invest_amount or self.dry_run:
             logger.info("Enough cash is available; searching for loans...")
@@ -114,7 +115,7 @@ class Bot:
             sleep_time_delta = POLL_TIME
             logger.info(f"Starting polling once {humanize.naturaldelta(POLL_TIME)}...")
 
-        return cash, sleep_time_delta
+        return total_value, sleep_time_delta
 
     @staticmethod
     def _get_bid_amount(cash: Decimal, min_bid: Decimal):

@@ -69,15 +69,16 @@ class TestBot:
         [
             "cli_config",
             "bot_config",
-            "previous_cash",
+            "previous_total_value",
+            "total_value",
             "available_cash",
             "expected_order_amount",
         ],
         [
-            ({}, {}, Decimal("111.1111"), Decimal("111.1111"), None),
-            ({}, {}, None, Decimal("111.1111"), Decimal("36.11")),
-            ({}, {}, None, Decimal("24.99"), None),
-            ({"dry-run": True}, {}, None, Decimal("24.99"), None),
+            ({}, {}, Decimal("111.1111"), Decimal("111.1111"), Decimal("25.00"), None),
+            ({}, {}, None, Decimal("111.1111"), Decimal("111.1111"), Decimal("36.11")),
+            ({}, {}, None, Decimal("111.1111"), Decimal("24.99"), None),
+            ({"dry-run": True}, {}, None, Decimal("111.1111"), Decimal("25.00"), None),
         ],
     )
     def test_do_run(
@@ -86,7 +87,8 @@ class TestBot:
         client_mock,
         cli_config,
         bot_config,
-        previous_cash,
+        previous_total_value,
+        total_value,
         available_cash,
         expected_order_amount,
     ):
@@ -194,7 +196,7 @@ class TestBot:
                     "total_principal_received_on_active_notes": 111.11,
                     "total_amount_invested_on_active_notes": 1111.11,
                     "outstanding_principal_on_active_notes": 1111.11,
-                    "total_account_value": 1111.11,
+                    "total_account_value": total_value,
                     "pending_deposit": 0.0,
                     "last_deposit_amount": 30.0,
                     "last_deposit_date": "2023-10-23 07:00:00 +0000",
@@ -246,12 +248,12 @@ class TestBot:
         )
 
         botty = Bot(config)
-        cash, sleep_time = botty._do_run(previous_cash)
+        new_total_value, sleep_time = botty._do_run(previous_total_value)
 
         client_mock.return_value.get_account_info.assert_called_once()
-        assert cash == available_cash
+        assert new_total_value == total_value
         if (
-            available_cash != previous_cash
+            total_value != previous_total_value
             and available_cash > Decimal("25")
             or dry_run
         ):
