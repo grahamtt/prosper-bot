@@ -2,11 +2,13 @@ import logging
 from datetime import timedelta
 from decimal import Decimal
 from time import sleep
+from typing import Union
 
 import humanize
 import simplejson as json
 from prosper_api.client import Client
 from prosper_shared.omni_config import ConfigKey, config_schema
+from schema import Optional as SchemaOptional
 
 from prosper_bot.allocation_strategy import AllocationStrategies
 from prosper_bot.cli import DRY_RUN_CONFIG, VERBOSE_CONFIG, build_config
@@ -18,9 +20,11 @@ logging.basicConfig(
 )
 
 MIN_BID_CONFIG = "prosper-bot.bot.min_bid"
+TARGET_LOAN_COUNT_CONFIG = "prosper-bot.bot.target-loan-count"
 STRATEGY_CONFIG = "prosper-bot.bot.strategy"
 
 POLL_TIME = timedelta(minutes=1)
+MIN_ALLOWED_BID = Decimal("25.00")
 
 
 @config_schema
@@ -31,13 +35,19 @@ def _schema():
                 ConfigKey(
                     "min-bid",
                     "Minimum amount of a loan to purchase.",
-                    default=Decimal("25.00"),
+                    default=MIN_ALLOWED_BID,
                 ): Decimal,
                 ConfigKey(
                     "strategy",
                     "Strategy for balancing your portfolio.",
                     default=AllocationStrategies.AGGRESSIVE,
                 ): AllocationStrategies,
+                SchemaOptional(
+                    ConfigKey(
+                        "target-loan-count",
+                        "Calculate min bid based on (total account value / target loan count). Overrides min-bid if present.",
+                    )
+                ): int,
             }
         }
     }
@@ -60,6 +70,7 @@ class Bot:
         self.client = Client(config=self.config)
         self.dry_run = self.config.get_as_bool(DRY_RUN_CONFIG)
         self.min_bid = self.config.get_as_decimal(MIN_BID_CONFIG, Decimal(25.00))
+        self.target_loan_count = self.config.get(TARGET_LOAN_COUNT_CONFIG)
         self.strategy = self.config.get_as_enum(STRATEGY_CONFIG, AllocationStrategies)
 
     def run(self):
@@ -90,7 +101,9 @@ class Bot:
 
         allocation_strategy = self.strategy.to_strategy(self.client)
 
-        invest_amount = self._get_bid_amount(cash, self.min_bid)
+        invest_amount = self._get_bid_amount(
+            cash, self.min_bid, account.total_account_value, self.target_loan_count
+        )
         if invest_amount or self.dry_run:
             logger.info("Enough cash is available; searching for loans...")
 
@@ -117,12 +130,27 @@ class Bot:
         return cash, sleep_time_delta
 
     @staticmethod
-    def _get_bid_amount(cash: Decimal, min_bid: Decimal):
+    def _get_bid_amount(
+        cash: Decimal,
+        min_bid: Decimal,
+        total_account_value,
+        target_loan_count: Union[int, None],
+    ):
+        if target_loan_count is not None:
+            min_bid = max(
+                _round_down_to_nearest_cent(total_account_value / target_loan_count),
+                MIN_ALLOWED_BID,
+            )
+
+        logger.debug(f"Using ${min_bid} for min bid size")
+
         if cash < min_bid:
             return 0
-        return (min_bid + cash % min_bid).quantize(
-            Decimal(".01"), rounding="ROUND_DOWN"
-        )
+        return _round_down_to_nearest_cent(min_bid + cash % min_bid)
+
+
+def _round_down_to_nearest_cent(amount: Decimal):
+    return amount.quantize(Decimal(".01"), rounding="ROUND_DOWN")
 
 
 def runner():

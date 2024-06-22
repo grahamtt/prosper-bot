@@ -22,34 +22,57 @@ class TestBot:
         return mocker.patch("prosper_bot.bot.bot.Client")
 
     @pytest.mark.parametrize(
-        ["input", "min_bid", "expected_output"],
+        [
+            "available_cash",
+            "min_bid",
+            "total_account_value",
+            "target_loan_count",
+            "expected_output",
+        ],
         [
             # Min bid = 25
-            (Decimal("0"), Decimal("25"), Decimal("0")),
-            (Decimal("24.99"), Decimal("25"), Decimal("0")),
-            (Decimal("25.00"), Decimal("25"), Decimal("25.00")),
-            (Decimal("25.01"), Decimal("25"), Decimal("25.01")),
-            (Decimal("49.99"), Decimal("25"), Decimal("49.99")),
-            (Decimal("50.00"), Decimal("25"), Decimal("25.00")),
-            (Decimal("50.01"), Decimal("25"), Decimal("25.01")),
-            (Decimal("75"), Decimal("25"), Decimal("25")),
-            (Decimal("74.996866"), Decimal("25"), Decimal("49.99")),
-            (Decimal("110.886866"), Decimal("25"), Decimal("35.88")),
+            (Decimal("0"), Decimal("25"), None, None, Decimal("0")),
+            (Decimal("24.99"), Decimal("25"), None, None, Decimal("0")),
+            (Decimal("25.00"), Decimal("25"), None, None, Decimal("25.00")),
+            (Decimal("25.01"), Decimal("25"), None, None, Decimal("25.01")),
+            (Decimal("49.99"), Decimal("25"), None, None, Decimal("49.99")),
+            (Decimal("50.00"), Decimal("25"), None, None, Decimal("25.00")),
+            (Decimal("50.01"), Decimal("25"), None, None, Decimal("25.01")),
+            (Decimal("75"), Decimal("25"), None, None, Decimal("25")),
+            (Decimal("74.996866"), Decimal("25"), None, None, Decimal("49.99")),
+            (Decimal("110.886866"), Decimal("25"), None, None, Decimal("35.88")),
             # Min bid = 30
-            (Decimal("50.00"), Decimal("30"), Decimal("50.00")),
-            (Decimal("59.99"), Decimal("30"), Decimal("59.99")),
-            (Decimal("59.999999"), Decimal("30"), Decimal("59.99")),
-            (Decimal("60.00"), Decimal("30"), Decimal("30.00")),
-            (Decimal("60.000001"), Decimal("30"), Decimal("30.00")),
-            (Decimal("60.01"), Decimal("30"), Decimal("30.01")),
+            (Decimal("50.00"), Decimal("30"), None, None, Decimal("50.00")),
+            (Decimal("59.99"), Decimal("30"), None, None, Decimal("59.99")),
+            (Decimal("59.999999"), Decimal("30"), None, None, Decimal("59.99")),
+            (Decimal("60.00"), Decimal("30"), None, None, Decimal("30.00")),
+            (Decimal("60.000001"), Decimal("30"), None, None, Decimal("30.00")),
+            (Decimal("60.01"), Decimal("30"), None, None, Decimal("30.01")),
             # Min bid = 27.56
-            (Decimal("55.11"), Decimal("27.56"), Decimal("55.11")),
-            (Decimal("55.12"), Decimal("27.56"), Decimal("27.56")),
-            (Decimal("55.13"), Decimal("27.56"), Decimal("27.57")),
+            (Decimal("55.11"), Decimal("27.56"), None, None, Decimal("55.11")),
+            (Decimal("55.12"), Decimal("27.56"), None, None, Decimal("27.56")),
+            (Decimal("55.13"), Decimal("27.56"), None, None, Decimal("27.57")),
+            # Target loan count = 40
+            (Decimal("50.00"), Decimal("30"), Decimal("30"), 40, Decimal("25.00")),
+            (Decimal("50.00"), Decimal("30"), Decimal("1000"), 40, Decimal("25.00")),
+            (Decimal("50.00"), Decimal("30"), Decimal("2000"), 40, Decimal("50.00")),
+            (Decimal("51.00"), Decimal("30"), Decimal("2000"), 40, Decimal("51.00")),
         ],
     )
-    def test__get_bid_amount(self, input: Decimal, min_bid: Decimal, expected_output):
-        assert Bot._get_bid_amount(input, min_bid) == expected_output
+    def test__get_bid_amount(
+        self,
+        available_cash: Decimal,
+        min_bid: Decimal,
+        total_account_value: Decimal,
+        target_loan_count: int,
+        expected_output,
+    ):
+        assert (
+            Bot._get_bid_amount(
+                available_cash, min_bid, total_account_value, target_loan_count
+            )
+            == expected_output
+        )
 
     @pytest.mark.timeout("5")
     def test_run_when_exception(self, mocker, client_mock):
@@ -77,6 +100,11 @@ class TestBot:
             ({}, {}, Decimal("111.1111"), Decimal("111.1111"), None),
             ({}, {}, None, Decimal("111.1111"), Decimal("36.11")),
             ({}, {}, None, Decimal("24.99"), None),
+            ({}, {"target-loan-count": 40}, None, Decimal("24.99"), None),
+            ({}, {"target-loan-count": 40}, None, Decimal("27.77"), Decimal("27.77")),
+            ({}, {"target-loan-count": 40}, None, Decimal("30.00"), Decimal("30.00")),
+            ({}, {"target-loan-count": 40}, None, Decimal("55.53"), Decimal("55.53")),
+            ({}, {"target-loan-count": 40}, None, Decimal("55.54"), Decimal("27.77")),
             ({"dry-run": True}, {}, None, Decimal("24.99"), None),
         ],
     )

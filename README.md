@@ -48,7 +48,8 @@ usage: prosper-bot [-h] [-u | --use-decimals | --no-use-decimals]
                    [--parse-enums | --no-parse-enums] [-c CLIENT-ID]
                    [--client-secret CLIENT-SECRET] [--username USERNAME]
                    [--password PASSWORD] [-t TOKEN-CACHE] [-m MIN-BID]
-                   [-s {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}] [-v] [-d]
+                   [-s {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}]
+                   [--target-loan-count TARGET-LOAN-COUNT] [-v] [-d]
 
 options:
   -h, --help            show this help message and exit
@@ -86,6 +87,9 @@ prosper-bot.bot:
   -s {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}, --strategy {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}
                         Strategy for balancing your portfolio.; Type: str; Default:
                         AGGRESSIVE
+  --target-loan-count TARGET-LOAN-COUNT
+                        Calculate min bid based on (total account value / target loan
+                        count). Overrides min-bid if present.; Type: int
 
 prosper-bot.cli:
   -v, --verbose         Prints additional debug messages.; Type: bool
