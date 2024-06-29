@@ -1,4 +1,3 @@
-import datetime
 from decimal import Decimal
 
 import pytest
@@ -10,7 +9,7 @@ from prosper_api.models import (
     SearchListingsRequest,
     SearchListingsResponse,
 )
-from prosper_api.models.enums import EmploymentStatus
+from prosper_api.models.enums import EmploymentStatus, ProsperRating
 
 from prosper_bot.allocation_strategy import (
     _BASE_REQUEST,
@@ -33,13 +32,9 @@ class TestAllocationStrategy:
         total_account_value=Decimal("5651.791111"),
         pending_deposit=Decimal("0.0"),
         last_deposit_amount=Decimal("222.0"),
-        last_deposit_date=datetime.datetime(
-            2023, 12, 4, 8, 0, tzinfo=datetime.timezone.utc
-        ),
+        last_deposit_date="2023-12-04T08:00Z",
         last_withdraw_amount=Decimal("-14.31"),
-        last_withdraw_date=datetime.datetime(
-            2012, 11, 7, 8, 0, tzinfo=datetime.timezone.utc
-        ),
+        last_withdraw_date="2023-12-04T08:00Z",
         external_user_id="ABCDEFG1234567890",
         prosper_account_digest="0123456789ABCDEF=",
         invested_notes=AmountsByRating(
@@ -64,17 +59,38 @@ class TestAllocationStrategy:
             listing_number=listing_num,
             listing_start_date="1234-12-34",
             listing_creation_date="4321-43-21",
-            listing_status="BLAH",
+            listing_status=2,
             listing_status_reason="BLAH",
             invested=True,
             biddable=True,
             has_mortgage=True,
-            credit_bureau_values_transunion_indexed={},
+            credit_bureau_values_transunion_indexed={
+                "g102s_months_since_most_recent_inquiry": 3,
+                "credit_report_date": "some-date",
+                "at02s_open_accounts": 3,
+                "g041s_accounts_30_or_more_days_past_due_ever": 1,
+                "g093s_number_of_public_records": 0,
+                "g094s_number_of_public_record_bankruptcies": 0,
+                "g095s_months_since_most_recent_public_record": -1,
+                "g218b_number_of_delinquent_accounts": 5,
+                "g980s_inquiries_in_the_last_6_months": 4,
+                "re20s_age_of_oldest_revolving_account_in_months": 50,
+                "s207s_months_since_most_recent_public_record_bankruptcy": -1,
+                "re33s_balance_owed_on_all_revolving_accounts": 40000,
+                "at57s_amount_delinquent": 0,
+                "g099s_public_records_last_24_months": 0,
+                "at20s_oldest_trade_open_date": 1234.5678,
+                "at03s_current_credit_lines": 15,
+                "re101s_revolving_balance": 40000,
+                "bc34s_bankcard_utilization": 0.5,
+                "at01s_credit_lines": 20,
+                "fico_score": "<600",
+            },
             employment_status_description=EmploymentStatus.EMPLOYED,
             investment_type_description="BLAH",
             last_updated_date="2345-67-89",
             decision_bureau="blah",
-            member_key=1,
+            member_key="1",
             borrower_state="CA",
             co_borrower_application=False,
             income_verifiable=True,
@@ -171,14 +187,13 @@ class TestAllocationStrategy:
         )
 
         assert [r.prosper_rating for r in allocation_strategy._search_requests] == [
-            ["D"],
-            ["E"],
-            ["C"],
-            ["NA"],
-            ["HR"],
-            ["B"],
-            ["AA"],
-            ["A"],
+            [ProsperRating.D],
+            [ProsperRating.E],
+            [ProsperRating.C],
+            [ProsperRating.HR],
+            [ProsperRating.B],
+            [ProsperRating.AA],
+            [ProsperRating.A],
         ]
 
     @pytest.mark.parametrize(
@@ -191,7 +206,6 @@ class TestAllocationStrategy:
                     {"prosper_rating": ["D"]},
                     {"prosper_rating": ["E"]},
                     {"prosper_rating": ["C"]},
-                    {"prosper_rating": ["NA"]},
                     {"prosper_rating": ["HR"]},
                     {"prosper_rating": ["B"]},
                     {"prosper_rating": ["AA"]},
@@ -205,7 +219,6 @@ class TestAllocationStrategy:
                     {"prosper_rating": ["A"]},
                     {"prosper_rating": ["AA"]},
                     {"prosper_rating": ["B"]},
-                    {"prosper_rating": ["NA"]},
                     {"prosper_rating": ["HR"]},
                     {"prosper_rating": ["C"]},
                     {"prosper_rating": ["D"]},
@@ -228,6 +241,6 @@ class TestAllocationStrategy:
 
         assert isinstance(strategy, expected_class)
         assert strategy._search_requests == [
-            SearchListingsRequest(**{**_BASE_REQUEST._asdict(), **r})
+            SearchListingsRequest(**{**_BASE_REQUEST.model_dump(), **r})
             for r in expected_search_request
         ]

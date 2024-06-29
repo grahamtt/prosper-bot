@@ -17,7 +17,7 @@ python = ">=3.9,<4.0"
 backoff = "^2.2.1"
 black = "^23.11.0"
 humanize = "^4.8.0"
-prosper-api = {version = "^0.8.3", extras = ["secure"]}
+prosper-api = {version = "^0.9.2", extras = ["secure"]}
 prosper-shared = "0.2.15"
 pytz = "^2023.3.post1"
 simplejson = "^3.19.2"
@@ -50,7 +50,7 @@ pre-commit = [
 
 [tool.autohooks.plugins.build_extras]
 commands = [
-    "jinja2 -Dcli_options=\"`COLUMNS=94 prosper-bot -h`\" README.md.jinja2 > README.md"
+    "jinja2 -Dcli_options=\"`COLUMNS=94 prosper-bot -h`\" -Dconfig_options=\"`echo 'from prosper_shared.omni_config import get_config_help\nfrom prosper_api.client import Client\nfrom prosper_bot import bot\nfrom prosper_bot import cli\nfrom prosper_shared.serde import *\nprint(get_config_help())\n' | python`\" README.md.jinja2 > README.md"
 ]
 affected_files = ['README.md']
 

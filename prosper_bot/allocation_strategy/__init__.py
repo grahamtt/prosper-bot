@@ -102,7 +102,6 @@ class AllocationStrategy(Iterable[Listing]):
 
 
 _AGGRESSIVE_TARGETS = {
-    "NA": Decimal("0"),
     "HR": Decimal("0.02"),
     "E": Decimal("0.26"),
     "D": Decimal("0.23"),
@@ -113,7 +112,6 @@ _AGGRESSIVE_TARGETS = {
 }
 
 _CONSERVATIVE_TARGETS = {
-    "NA": Decimal("0"),
     "HR": Decimal("0.02"),
     "E": Decimal("0.06"),
     "D": Decimal("0.06"),
@@ -146,8 +144,8 @@ class FixedTargetAllocationStrategy(AllocationStrategy):
         """
         buckets = {}
         account = client.get_account_info()
-        invested_notes = account.invested_notes._asdict()
-        pending_bids = account.pending_bids._asdict()
+        invested_notes = account.invested_notes.model_dump()
+        pending_bids = account.pending_bids.model_dump()
         total_account_value = account.total_account_value
         for rating in invested_notes.keys():
             # This assumes the ratings will never change
@@ -156,7 +154,7 @@ class FixedTargetAllocationStrategy(AllocationStrategy):
             buckets[rating] = _BucketDatum(
                 value=value,
                 pct_of_total=pct_of_total,
-                error_pct=targets[rating] - pct_of_total,
+                error_pct=(targets[rating] if rating in targets else 0) - pct_of_total,
             )
 
         buckets["Cash"] = _BucketDatum(
@@ -174,11 +172,11 @@ class FixedTargetAllocationStrategy(AllocationStrategy):
         )
 
         logger.info(
-            f"Pending investments = ${account.pending_investments_primary_market:7.2f}"
+            f"Pending investments = ${account.pending_investments_primary_market:8.2f}"
         )
         for key, bucket in buckets.items():
             logger.info(
-                f"\t{key:16}= ${bucket.value:8.2f} ({bucket.pct_of_total * 100:6.2f}%) error: {bucket.error_pct * 100:6.3f}%"
+                f"\t{key:17}= ${bucket.value:8.2f} ({bucket.pct_of_total * 100:6.2f}%) error: {bucket.error_pct * 100:6.3f}%"
             )
 
         grade_buckets_sorted_by_error_pct = sorted(
@@ -189,7 +187,7 @@ class FixedTargetAllocationStrategy(AllocationStrategy):
 
         self._search_requests = [
             SearchListingsRequest(
-                **{**_BASE_REQUEST._asdict(), "prosper_rating": [b[0]]},
+                **{**_BASE_REQUEST.model_dump(), "prosper_rating": [b[0]]},
             )
             for b in grade_buckets_sorted_by_error_pct
         ]
