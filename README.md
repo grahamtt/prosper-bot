@@ -44,7 +44,7 @@ Prosper bot exposes all the config options from `prosper-api`, plus the options 
 
 ```yaml
 prosper-api.auth.token-cache:
-  default: /home/graham/.cache/prosper-api/token-cache
+  default: /Users/graham/Library/Caches/prosper-api/token-cache
   description: The filesystem location where the auth token will be cached.
   optional: false
   type: str
@@ -85,7 +85,7 @@ usage: prosper-bot [-h] [-c CLIENT-ID] [--client-secret CLIENT-SECRET] [-u USERN
                    [-s {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}]
                    [--target-loan-count TARGET-LOAN-COUNT] [-v] [-d]
 
-options:
+optional arguments:
   -h, --help            show this help message and exit
 
 prosper-api.credentials:
@@ -103,7 +103,7 @@ prosper-api.credentials:
 prosper-api.auth:
   -t TOKEN-CACHE, --token-cache TOKEN-CACHE
                         The filesystem location where the auth token will be cached.; Type:
-                        str; Default: /home/graham/.cache/prosper-api/token-cache
+                        str; Default: /Users/graham/Library/Caches/prosper-api/token-cache
 
 prosper-bot.bot:
   -m MIN-BID, --min-bid MIN-BID
