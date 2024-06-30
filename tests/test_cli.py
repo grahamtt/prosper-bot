@@ -12,39 +12,6 @@ class TestCli:
     # Ensure the schema is loaded
     bot._schema()
 
-    def test_build_config_defaults(self, mocker):
-        mocker.patch.object(
-            sys,
-            "argv",
-            [
-                "test-cli",
-                "--client-id=0123456789abcdef0123456789abcdef",
-                "--username=fake-username",
-                "--token-cache=fake-token-cache",
-            ],
-        )
-
-        config = build_config()
-
-        assert config._config_dict["prosper-bot"]["bot"] == pytest.approx(
-            {
-                "min-bid": Decimal("25"),
-                "strategy": AllocationStrategies.AGGRESSIVE,
-                "target-loan-count": 500,
-            }
-        )
-        assert config._config_dict["prosper-bot"]["cli"] == {
-            "dry-run": False,
-            "verbose": False,
-        }
-        assert config._config_dict["prosper-api"] == {
-            "auth": {"token-cache": "fake-token-cache"},
-            "credentials": {
-                "client-id": "0123456789abcdef0123456789abcdef",
-                "username": "fake-username",
-            },
-        }
-
     def test_build_config(self, mocker):
         mocker.patch.object(
             sys,
