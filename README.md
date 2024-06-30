@@ -43,7 +43,38 @@ prosper-bot
 Prosper bot exposes all the config options from `prosper-api`, plus the options in the `bot` and `cli` sections below.
 
 ```yaml
-
+prosper-api.auth.token-cache:
+  default: /home/graham/.cache/prosper-api/token-cache
+  description: The filesystem location where the auth token will be cached.
+  optional: false
+  type: str
+prosper-api.credentials.client-id:
+  constraint: ^[a-f0-9]{32}$
+  description: The client-id from Prosper.
+  optional: false
+  type: str
+prosper-api.credentials.client-secret:
+  constraint: ^[a-f0-9]{32}$
+  description: The client-secret from Prosper; can be stored and accessed securely using the keyring
+    library.
+  optional: true
+  type: str
+prosper-api.credentials.password:
+  description: Your Prosper password; can be stored and accessed securely using the keyring library.
+  optional: true
+  type: str
+prosper-api.credentials.username:
+  description: Your Prosper username
+  optional: false
+  type: str
+prosper-bot.cli.dry-run:
+  description: Run the loop but don't actually place any orders.
+  optional: false
+  type: bool
+prosper-bot.cli.verbose:
+  description: Prints additional debug messages.
+  optional: false
+  type: bool
 ```
 
 All configs can be provided as command-line options as well:
