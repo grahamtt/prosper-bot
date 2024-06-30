@@ -85,7 +85,7 @@ usage: prosper-bot [-h] [-c CLIENT-ID] [--client-secret CLIENT-SECRET] [-u USERN
                    [-s {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}]
                    [--target-loan-count TARGET-LOAN-COUNT] [-v] [-d]
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
 
 prosper-api.credentials:
