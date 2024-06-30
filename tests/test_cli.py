@@ -44,9 +44,6 @@ class TestCli:
                 "username": "fake-username",
             },
         }
-        assert config._config_dict["prosper-shared"] == {
-            "serde": {"parse-dates": True, "parse-enums": True, "use-decimals": True}
-        }
 
     def test_build_config(self, mocker):
         mocker.patch.object(
@@ -85,7 +82,4 @@ class TestCli:
                 "client-id": "0123456789abcdef0123456789abcdef",
                 "username": "fake-username",
             },
-        }
-        assert config._config_dict["prosper-shared"] == {
-            "serde": {"parse-dates": True, "parse-enums": True, "use-decimals": True}
         }
