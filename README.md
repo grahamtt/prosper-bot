@@ -90,34 +90,34 @@ options:
 
 prosper-api.credentials:
   -c CLIENT-ID, --client-id CLIENT-ID
-                        The client-id from Prosper.; Type: str matching /^[a-f0-9]{32}$/
+                        The client-id from Prosper; Type: str matching /^[a-f0-9]{32}$/
   --client-secret CLIENT-SECRET
                         The client-secret from Prosper; can be stored and accessed securely
-                        using the keyring library.; Type: str matching /^[a-f0-9]{32}$/
+                        using the keyring library; Type: str matching /^[a-f0-9]{32}$/
   -u USERNAME, --username USERNAME
                         Your Prosper username; Type: str
   -p PASSWORD, --password PASSWORD
                         Your Prosper password; can be stored and accessed securely using the
-                        keyring library.; Type: str
+                        keyring library; Type: str
 
 prosper-api.auth:
   -t TOKEN-CACHE, --token-cache TOKEN-CACHE
-                        The filesystem location where the auth token will be cached.; Type:
+                        The filesystem location where the auth token will be cached; Type:
                         str; Default: /Users/graham/Library/Caches/prosper-api/token-cache
 
 prosper-bot.bot:
   -m MIN-BID, --min-bid MIN-BID
-                        Minimum amount of a loan to purchase.; Type: Decimal; Default: 25.00
+                        Minimum amount of a loan to purchase; Type: Decimal; Default: 25.00
   -s {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}, --strategy {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}
-                        Strategy for balancing your portfolio.; Type: str; Default:
+                        Strategy for balancing your portfolio; Type: str; Default:
                         AGGRESSIVE
   --target-loan-count TARGET-LOAN-COUNT
                         Calculate min bid based on (total account value / target loan
-                        count). Overrides min-bid if present.; Type: int
+                        count). Overrides min-bid if present; Type: int
 
 prosper-bot.cli:
-  -v, --verbose         Prints additional debug messages.; Type: bool
-  -d, --dry-run         Run the loop but don't actually place any orders.; Type: bool
+  -v, --verbose         Prints additional debug messages; Type: bool
+  -d, --dry-run         Run the loop but don't actually place any orders; Type: bool
 ```
 
 ## Feedback
