@@ -2,6 +2,10 @@ import sys
 from decimal import Decimal
 
 import pytest
+from prosper_shared.omni_config import _realize_config_schemata, _realize_input_schemata
+from prosper_shared.omni_config._define import _arg_parse_from_schema
+from prosper_shared.omni_config._merge import _merge_config
+from prosper_shared.omni_config._parse import _ArgParseSource
 
 from prosper_bot.allocation_strategy import AllocationStrategies
 from prosper_bot.bot import bot
@@ -24,7 +28,7 @@ class TestCli:
                 "--dry-run",
                 "--verbose",
                 "--min-bid=30",
-                "--target-loan-count=600"
+                "--target-loan-count=600",
                 # TODO: the --strategy param is broken :(
                 # "--strategy=CONSERVATIVE",
             ],
@@ -50,3 +54,14 @@ class TestCli:
                 "username": "fake-username",
             },
         }
+
+    def test_cli_help(self, snapshot):
+        """This test asserts that the CLI help hasn't changed so we can ensure there are no backwards-incompatible changes."""
+        config_schemata = _merge_config(_realize_config_schemata())
+        input_schemata = _merge_config(_realize_input_schemata())
+        source = _ArgParseSource(
+            _arg_parse_from_schema(
+                config_schemata, input_schemata, prog_name="prosper-bot"
+            )
+        )
+        assert source._argument_parser.format_help() == snapshot

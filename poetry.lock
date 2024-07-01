@@ -2181,6 +2181,20 @@ files = [
 ]
 
 [[package]]
+name = "syrupy"
+version = "4.6.1"
+description = "Pytest Snapshot Test Utility"
+optional = false
+python-versions = ">=3.8.1,<4"
+files = [
+    {file = "syrupy-4.6.1-py3-none-any.whl", hash = "sha256:203e52f9cb9fa749cf683f29bd68f02c16c3bc7e7e5fe8f2fc59bdfe488ce133"},
+    {file = "syrupy-4.6.1.tar.gz", hash = "sha256:37a835c9ce7857eeef86d62145885e10b3cb9615bc6abeb4ce404b3f18e1bb36"},
+]
+
+[package.dependencies]
+pytest = ">=7.0.0,<9.0.0"
+
+[[package]]
 name = "termcolor"
 version = "2.4.0"
 description = "ANSI color formatting for output in terminal"
@@ -2359,4 +2373,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0"
-content-hash = "8d734bb87a41e2c56def12a71b510033c1cda7494c71d807c0312d1c26c551fb"
+content-hash = "0def0fc385b41c43913cc901fe300c67b569740295bb0069058e8d7bb5065e58"

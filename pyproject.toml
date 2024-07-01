@@ -27,8 +27,9 @@ pytz = "^2023.3.post1"
 simplejson = "^3.19.2"
 
 [tool.poetry.group.dev.dependencies]
-prosper-shared = { version = ">0.2.0", extras = ["dev", "yaml"] }
+prosper-shared = { version = ">=0.7.3", extras = ["dev", "yaml"] }
 pytest-timeout = "^2.2.0"
+syrupy = "^4.6.1"
 
 [tool.autohooks]
 mode = "poetry"
