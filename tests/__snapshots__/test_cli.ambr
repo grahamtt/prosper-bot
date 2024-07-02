@@ -26,8 +26,7 @@
   prosper-api.auth:
     -t TOKEN-CACHE, --token-cache TOKEN-CACHE
                           The filesystem location where the auth token will be
-                          cached; Type: str; Default:
-                          /Users/graham/Library/Caches/prosper-api/token-cache
+                          cached; Type: str; Default: /some/path/to/token-cache
   
   prosper-bot.bot:
     -m MIN-BID, --min-bid MIN-BID

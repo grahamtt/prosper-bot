@@ -59,6 +59,11 @@ class TestCli:
         """This test asserts that the CLI help hasn't changed so we can ensure there are no backwards-incompatible changes."""
         config_schemata = _merge_config(_realize_config_schemata())
         input_schemata = _merge_config(_realize_input_schemata())
+        next(
+            v
+            for v in config_schemata["prosper-api"]["auth"].keys()
+            if v._expected_val == "token-cache"
+        )._default = "/some/path/to/token-cache"
         source = _ArgParseSource(
             _arg_parse_from_schema(
                 config_schemata, input_schemata, prog_name="prosper-bot"
