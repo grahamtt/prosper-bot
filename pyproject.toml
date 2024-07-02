@@ -23,7 +23,7 @@ backoff = "^2.2.1"
 black = "^24.4.2"
 humanize = "^4.8.0"
 prosper-api = {version = "^0.9.5", extras = ["secure"]}
-pytz = "^2023.3.post1"
+pytz = "^2024.1"
 simplejson = "^3.19.2"
 
 [tool.poetry.group.dev.dependencies]
