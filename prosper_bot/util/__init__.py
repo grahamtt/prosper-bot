@@ -1,4 +1,5 @@
 import logging
+from decimal import Decimal
 from numbers import Number
 from typing import Any, Callable, Dict, Hashable, Iterable
 
@@ -98,3 +99,10 @@ def print_histogram(
         printer(
             f"{key:{max_len}}: {'#'*int(scaled_val)} {scaled_val:3.2f}{'%' if percent else ''}"
         )
+
+
+def round_down_to_nearest_cent(amount: Decimal):
+    """Round down the given amount to the nearest cent."""
+    rounded_amount = amount.quantize(Decimal(".01"), rounding="ROUND_DOWN")
+    logging.debug(f"Rounded down ${amount} to nearest cent: ${rounded_amount}")
+    return rounded_amount

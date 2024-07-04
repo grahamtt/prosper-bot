@@ -12,6 +12,7 @@ from schema import Optional as SchemaOptional
 
 from prosper_bot.allocation_strategy import AllocationStrategies
 from prosper_bot.cli import DRY_RUN_CONFIG, VERBOSE_CONFIG, build_config
+from prosper_bot.util import round_down_to_nearest_cent
 
 logger = logging.getLogger(__file__)
 
@@ -138,7 +139,7 @@ class Bot:
     ):
         if target_loan_count is not None:
             min_bid = max(
-                _round_down_to_nearest_cent(total_account_value / target_loan_count),
+                round_down_to_nearest_cent(total_account_value / target_loan_count),
                 MIN_ALLOWED_BID,
             )
 
@@ -146,11 +147,7 @@ class Bot:
 
         if cash < min_bid:
             return 0
-        return _round_down_to_nearest_cent(min_bid + cash % min_bid)
-
-
-def _round_down_to_nearest_cent(amount: Decimal):
-    return amount.quantize(Decimal(".01"), rounding="ROUND_DOWN")
+        return round_down_to_nearest_cent(min_bid + cash % min_bid)
 
 
 def runner():

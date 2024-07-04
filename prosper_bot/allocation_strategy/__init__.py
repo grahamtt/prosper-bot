@@ -7,6 +7,8 @@ from typing import Callable, Dict, Iterable, Iterator, NamedTuple, Optional, Uni
 from prosper_api.client import Client
 from prosper_api.models import Listing, SearchListingsRequest
 
+from prosper_bot.util import round_down_to_nearest_cent
+
 _BASE_REQUEST = SearchListingsRequest(
     limit=10,
     biddable=True,
@@ -158,7 +160,7 @@ class FixedTargetAllocationStrategy(AllocationStrategy):
             )
 
         buckets["Cash"] = _BucketDatum(
-            account.available_cash_balance,
+            round_down_to_nearest_cent(account.available_cash_balance),
             account.available_cash_balance / total_account_value,
             0.0,
         )
