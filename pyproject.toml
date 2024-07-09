@@ -18,12 +18,13 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<4.0"
+python = ">=3.9,<3.13"
 backoff = "^2.2.1"
 black = "^24.4.2"
 humanize = "^4.8.0"
 prosper-api = {version = "^0.9.5", extras = ["secure"]}
 pytz = "^2024.1"
+pyxirr = "^0.10.4"
 simplejson = "^3.19.2"
 
 [tool.poetry.group.dev.dependencies]

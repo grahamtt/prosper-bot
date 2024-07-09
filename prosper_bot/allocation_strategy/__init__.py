@@ -69,14 +69,13 @@ class AllocationStrategy(Iterable[Listing]):
 
         This method enforces the timeout set at instantiation.
         """
-        if self._end_time is not None:
-            if datetime.now() > self._end_time:
-                raise StopIteration("Timed out while searching listings")
+        self._check_timeout()
 
         if self._buffer is None:
             self._buffer = self._refresh_buffer()
 
         while True:
+            self._check_timeout()
             try:
                 next_val = next(self._buffer)
                 break
@@ -101,6 +100,10 @@ class AllocationStrategy(Iterable[Listing]):
             result = self._client.search_listings(self._search_request).result
 
         return iter(result)
+
+    def _check_timeout(self):
+        if self._end_time is not None and datetime.now() > self._end_time:
+            raise StopIteration("Timed out while searching listings")
 
 
 _AGGRESSIVE_TARGETS = {
