@@ -2,12 +2,13 @@ from prosper_shared.omni_config import Config, ConfigKey, input_schema
 
 DRY_RUN_CONFIG = "prosper-bot.cli.dry-run"
 VERBOSE_CONFIG = "prosper-bot.cli.verbose"
+APP_NAME = "prosper-bot"
 
 
 @input_schema
 def _schema():
     return {
-        "prosper-bot": {
+        APP_NAME: {
             "cli": {
                 ConfigKey(
                     "verbose", "Prints additional debug messages.", default=False
@@ -24,4 +25,4 @@ def _schema():
 
 def build_config() -> Config:
     """Compiles all the config sources into a single config."""
-    return Config.autoconfig(validate=True)
+    return Config.autoconfig(APP_NAME, validate=True)

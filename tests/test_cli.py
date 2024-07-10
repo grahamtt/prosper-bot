@@ -55,8 +55,13 @@ class TestCli:
             },
         }
 
-    def test_cli_help(self, snapshot):
+    def test_cli_help(self, mocker, snapshot):
         """This test asserts that the CLI help hasn't changed so we can ensure there are no backwards-incompatible changes."""
+        mocker.patch(
+            "prosper_shared.omni_config._define.user_config_dir",
+            lambda i: f"/config_dir/dir/{i}",
+        )
+        mocker.patch("prosper_shared.omni_config._define.getcwd", lambda: "/cwd/dir")
         config_schemata = _merge_config(_realize_config_schemata())
         input_schemata = _merge_config(_realize_input_schemata())
         next(

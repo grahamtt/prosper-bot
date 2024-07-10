@@ -85,6 +85,11 @@ usage: prosper-bot [-h] [-c CLIENT-ID] [--client-secret CLIENT-SECRET] [-u USERN
                    [-s {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}]
                    [--target-loan-count TARGET-LOAN-COUNT] [-v] [-d]
 
+All optional program arguments can be provided via configuration file at the following
+locations: '/Users/graham/Library/Application Support/prosper-
+bot/config.{json|yml|yaml|toml}','/Users/graham/Programming/prosper-bot/prosper-
+bot.{json|yml|yaml|toml}',/Users/graham/Programming/prosper-bot/.pyproject.toml.
+
 options:
   -h, --help            show this help message and exit
 

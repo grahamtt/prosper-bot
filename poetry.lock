@@ -1437,20 +1437,20 @@ files = [
 
 [[package]]
 name = "prosper-api"
-version = "0.9.5"
+version = "0.10.0"
 description = "Python trading library for Prosper.com"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "prosper_api-0.9.5-py3-none-any.whl", hash = "sha256:5d9a4c85f182800fc53fe21f189d2849e725abb657e5f303d259649d65e3dd16"},
-    {file = "prosper_api-0.9.5.tar.gz", hash = "sha256:019a75e2f60da20434865d9d0d82f2defb120170d12c38b205b45f012c3804aa"},
+    {file = "prosper_api-0.10.0-py3-none-any.whl", hash = "sha256:53c75db20aac43ce693481c882946faa02acb6baa9cb725470e5fa15dafc70d6"},
+    {file = "prosper_api-0.10.0.tar.gz", hash = "sha256:034dca1025929cdcf7fbde7bf7d246f09286c6caaa171084a30c302bdc054753"},
 ]
 
 [package.dependencies]
 backoff = ">=2.2.1,<3.0.0"
 dpath = ">=2.1.6,<3.0.0"
 keyring = {version = ">=24.2.0,<25.0.0", optional = true, markers = "extra == \"secure\""}
-prosper-shared = ">=0.7.0,<0.8.0"
+prosper-shared = ">=0.8.0,<0.9.0"
 pydantic = ">=2.7.4,<3.0.0"
 ratelimit = ">=2.2.1,<3.0.0"
 requests = ">=2.31.0,<3.0.0"
@@ -1462,13 +1462,13 @@ secure = ["keyring (>=24.2.0,<25.0.0)"]
 
 [[package]]
 name = "prosper-shared"
-version = "0.7.3"
+version = "0.8.0"
 description = ""
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "prosper_shared-0.7.3-py3-none-any.whl", hash = "sha256:ac71c5109e9fbad3cf474acc120ba6abb89d0eeab4d7c3a03deab72d565317d9"},
-    {file = "prosper_shared-0.7.3.tar.gz", hash = "sha256:1bc468b7e36c85fdc5e3f44bfc8dc485124f3b4ff2e60860430b8e2cf6718514"},
+    {file = "prosper_shared-0.8.0-py3-none-any.whl", hash = "sha256:8a5e9ce6a454df11b829e9d4dd1c80f15a1886d1165ee215017920907f2fe764"},
+    {file = "prosper_shared-0.8.0.tar.gz", hash = "sha256:c166f4561e83675f4e7ea89e82931f6c374f963352856a046af43cf940e6fb4e"},
 ]
 
 [package.dependencies]
@@ -2344,13 +2344,13 @@ files = [
 
 [[package]]
 name = "tomlkit"
-version = "0.12.5"
+version = "0.13.0"
 description = "Style preserving TOML library"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "tomlkit-0.12.5-py3-none-any.whl", hash = "sha256:af914f5a9c59ed9d0762c7b64d3b5d5df007448eb9cd2edc8a46b1eafead172f"},
-    {file = "tomlkit-0.12.5.tar.gz", hash = "sha256:eef34fba39834d4d6b73c9ba7f3e4d1c417a4e56f89a7e96e090dd0d24b8fb3c"},
+    {file = "tomlkit-0.13.0-py3-none-any.whl", hash = "sha256:7075d3042d03b80f603482d69bf0c8f345c2b30e41699fd8883227f89972b264"},
+    {file = "tomlkit-0.13.0.tar.gz", hash = "sha256:08ad192699734149f5b97b45f1f18dad7eb1b6d16bc72ad0c2335772650d7b72"},
 ]
 
 [[package]]
@@ -2471,4 +2471,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.13"
-content-hash = "73210398839262c220ce425cd507a295a3c315cef6efbe479ce4ff33c290daa3"
+content-hash = "a9124eacaeda1154a6a217c66f604cd75489ce3fec143e32c9e16acf483e760c"
