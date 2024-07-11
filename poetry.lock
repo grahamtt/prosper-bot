@@ -1437,20 +1437,20 @@ files = [
 
 [[package]]
 name = "prosper-api"
-version = "0.10.0"
+version = "0.10.1"
 description = "Python trading library for Prosper.com"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "prosper_api-0.10.0-py3-none-any.whl", hash = "sha256:53c75db20aac43ce693481c882946faa02acb6baa9cb725470e5fa15dafc70d6"},
-    {file = "prosper_api-0.10.0.tar.gz", hash = "sha256:034dca1025929cdcf7fbde7bf7d246f09286c6caaa171084a30c302bdc054753"},
+    {file = "prosper_api-0.10.1-py3-none-any.whl", hash = "sha256:180b92f871a34765cdbaf88d6178fca8f05033c43557f0a8ca6a7b7a201e5192"},
+    {file = "prosper_api-0.10.1.tar.gz", hash = "sha256:4d4dd2e411ce8bc79be2d7a2c89ecdc0a8b32799339114b06ca774c2641d7858"},
 ]
 
 [package.dependencies]
 backoff = ">=2.2.1,<3.0.0"
 dpath = ">=2.1.6,<3.0.0"
 keyring = {version = ">=24.2.0,<25.0.0", optional = true, markers = "extra == \"secure\""}
-prosper-shared = ">=0.8.0,<0.9.0"
+prosper-shared = ">=0.8.1,<0.9.0"
 pydantic = ">=2.7.4,<3.0.0"
 ratelimit = ">=2.2.1,<3.0.0"
 requests = ">=2.31.0,<3.0.0"
@@ -1462,13 +1462,13 @@ secure = ["keyring (>=24.2.0,<25.0.0)"]
 
 [[package]]
 name = "prosper-shared"
-version = "0.8.0"
+version = "0.8.1"
 description = ""
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "prosper_shared-0.8.0-py3-none-any.whl", hash = "sha256:8a5e9ce6a454df11b829e9d4dd1c80f15a1886d1165ee215017920907f2fe764"},
-    {file = "prosper_shared-0.8.0.tar.gz", hash = "sha256:c166f4561e83675f4e7ea89e82931f6c374f963352856a046af43cf940e6fb4e"},
+    {file = "prosper_shared-0.8.1-py3-none-any.whl", hash = "sha256:684d2773c75679c497d2ab54e4f05bafbad5967cbd19cf58f0f5dacfdf9cb5d0"},
+    {file = "prosper_shared-0.8.1.tar.gz", hash = "sha256:20ff32354daf684645c605ce8e75e52e87779a1bfa2810c26b8d2462b2130afb"},
 ]
 
 [package.dependencies]
@@ -2471,4 +2471,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.13"
-content-hash = "a9124eacaeda1154a6a217c66f604cd75489ce3fec143e32c9e16acf483e760c"
+content-hash = "859c2fb2dbc637f81f3955558d451848d99475f94f1f5fcd3cb7dd55ec417e13"
