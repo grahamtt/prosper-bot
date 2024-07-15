@@ -1462,13 +1462,13 @@ secure = ["keyring (>=24.2.0,<25.0.0)"]
 
 [[package]]
 name = "prosper-shared"
-version = "0.8.1"
+version = "0.8.3"
 description = ""
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "prosper_shared-0.8.1-py3-none-any.whl", hash = "sha256:684d2773c75679c497d2ab54e4f05bafbad5967cbd19cf58f0f5dacfdf9cb5d0"},
-    {file = "prosper_shared-0.8.1.tar.gz", hash = "sha256:20ff32354daf684645c605ce8e75e52e87779a1bfa2810c26b8d2462b2130afb"},
+    {file = "prosper_shared-0.8.3-py3-none-any.whl", hash = "sha256:297f53b80a1a6761ca82bfbd24d5ce3778b2ded7e653737008b83b9b7812fde8"},
+    {file = "prosper_shared-0.8.3.tar.gz", hash = "sha256:f585f746002825e0c59a12b409e5223facc61133128d31ed02b0dd7d4bd48bf3"},
 ]
 
 [package.dependencies]
