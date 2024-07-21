@@ -10,7 +10,7 @@ from prosper_api.client import Client
 from prosper_shared.omni_config import ConfigKey, config_schema
 from schema import Optional as SchemaOptional
 
-from prosper_bot.allocation_strategy import AllocationStrategies
+from prosper_bot.allocation_strategy import AllocationStrategies, set_search_param
 from prosper_bot.cli import DRY_RUN_CONFIG, VERBOSE_CONFIG, build_config
 from prosper_bot.util import round_down_to_nearest_cent
 
@@ -23,6 +23,7 @@ logging.basicConfig(
 MIN_BID_CONFIG = "prosper-bot.bot.min_bid"
 TARGET_LOAN_COUNT_CONFIG = "prosper-bot.bot.target-loan-count"
 STRATEGY_CONFIG = "prosper-bot.bot.strategy"
+SEARCH_FOR_ALMOST_FUNDED_CONFIG = "prosper-bot.bot.search-for-almost-funded"
 
 POLL_TIME = timedelta(minutes=1)
 MIN_ALLOWED_BID = Decimal("25.00")
@@ -49,6 +50,13 @@ def _schema():
                         "Calculate min bid based on (total account value / target loan count). Overrides min-bid if present.",
                     )
                 ): int,
+                SchemaOptional(
+                    ConfigKey(
+                        "search-for-almost-funded",
+                        "Search for listings with remaining funding <= cash, which allows bidding when cash is less than $25.",
+                        default=False,
+                    )
+                ): bool,
             }
         }
     }
@@ -97,20 +105,31 @@ class Bot:
         logger.debug(json.dumps(account, indent=2, default=str))
 
         cash = account.available_cash_balance
+
         if previous_cash == cash:
             return cash, POLL_TIME
-
-        allocation_strategy = self.strategy.to_strategy(self.client)
 
         invest_amount = self._get_bid_amount(
             cash, self.min_bid, account.total_account_value, self.target_loan_count
         )
-        if invest_amount or self.dry_run:
-            logger.info("Enough cash is available; searching for loans...")
+        search_for_almost_funded = self.config.get_as_bool(
+            SEARCH_FOR_ALMOST_FUNDED_CONFIG
+        )
+        if not invest_amount and search_for_almost_funded:
+            set_search_param("amount_remaining_max", cash)
+            invest_amount = cash
 
-            listing = next(allocation_strategy)
+        allocation_strategy = self.strategy.to_strategy(self.client)
+        if invest_amount or self.dry_run:
+            try:
+                listing = next(allocation_strategy)
+            except StopIteration:
+                logger.debug("No matching listings found.")
+                return cash, POLL_TIME
+
             lender_yield = listing.lender_yield
             listing_number = listing.listing_number
+
             if self.dry_run:
                 logger.info(
                     f"DRYRUN: Would have purchased ${invest_amount:5.2f} of listing {listing_number} ({listing.prosper_rating}) at {lender_yield * 100:5.2f}% for {listing.listing_term} months"

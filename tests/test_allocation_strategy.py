@@ -9,14 +9,19 @@ from prosper_api.models import (
     SearchListingsRequest,
     SearchListingsResponse,
 )
-from prosper_api.models.enums import EmploymentStatus, ProsperRating
+from prosper_api.models.enums import (
+    EmploymentStatus,
+    ProsperRating,
+    SearchListingsSortBy,
+)
 
 from prosper_bot.allocation_strategy import (
-    _BASE_REQUEST,
     AllocationStrategies,
     AllocationStrategy,
     FixedTargetAllocationStrategy,
     HighestMatchingRateAllocationStrategy,
+    _search_params,
+    set_search_param,
 )
 
 
@@ -173,12 +178,10 @@ class TestAllocationStrategy:
         ]
 
     def test_highest_allocation_strategy(self, mock_client):
-        allocation_strategy = HighestMatchingRateAllocationStrategy(
-            mock_client, AllocationStrategies.OVERALL_HIGHEST_RATE.value[1]
-        )
+        allocation_strategy = HighestMatchingRateAllocationStrategy(mock_client)
 
         assert [r.sort_by for r in allocation_strategy._search_requests] == [
-            "lender_yield"
+            SearchListingsSortBy.LENDER_YIELD
         ]
 
     def test_fixed_target_allocation_strategy(self, mock_client):
@@ -241,6 +244,17 @@ class TestAllocationStrategy:
 
         assert isinstance(strategy, expected_class)
         assert strategy._search_requests == [
-            SearchListingsRequest(**{**_BASE_REQUEST.model_dump(), **r})
+            SearchListingsRequest(**{**_search_params, **r})
             for r in expected_search_request
         ]
+
+    def test_set_search_param(self):
+        set_search_param("random_param", 100)
+        assert _search_params == {
+            "biddable": True,
+            "invested": False,
+            "limit": 10,
+            "random_param": 100,
+            "sort_by": "lender_yield",
+            "sort_dir": "desc",
+        }

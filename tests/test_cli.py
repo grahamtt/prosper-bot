@@ -41,6 +41,7 @@ class TestCli:
                 "min-bid": Decimal("30"),
                 "strategy": AllocationStrategies.AGGRESSIVE,
                 "target-loan-count": 600,
+                "search-for-almost-funded": False,
             }
         )
         assert config._config_dict["prosper-bot"]["cli"] == {

@@ -9,13 +9,22 @@ from prosper_api.models import Listing, SearchListingsRequest
 
 from prosper_bot.util import round_down_to_nearest_cent
 
-_BASE_REQUEST = SearchListingsRequest(
-    limit=10,
-    biddable=True,
-    invested=False,
-    sort_by="lender_yield",
-    sort_dir="desc",
-)
+_search_params = {
+    "limit": 10,
+    "biddable": True,
+    "invested": False,
+    "sort_by": "lender_yield",
+    "sort_dir": "desc",
+}
+
+
+def set_search_param(key, value):
+    _search_params[key] = value
+
+
+def _build_search_request() -> SearchListingsRequest:
+    return SearchListingsRequest(**_search_params)
+
 
 __all__ = [
     "AllocationStrategy",
@@ -192,7 +201,7 @@ class FixedTargetAllocationStrategy(AllocationStrategy):
 
         self._search_requests = [
             SearchListingsRequest(
-                **{**_BASE_REQUEST.model_dump(), "prosper_rating": [b[0]]},
+                **{**_search_params, "prosper_rating": [b[0]]},
             )
             for b in grade_buckets_sorted_by_error_pct
         ]
@@ -203,14 +212,13 @@ class FixedTargetAllocationStrategy(AllocationStrategy):
 class HighestMatchingRateAllocationStrategy(AllocationStrategy):
     """Allocation strategy that greedily takes the listing with the highest lender yield."""
 
-    def __init__(self, client: Client, request: SearchListingsRequest):
+    def __init__(self, client: Client):
         """Creates a new allocation strategy.
 
         Args:
             client (Client): Prosper client
-            request (SearchListingsRequest): Base request for searching
         """
-        self._search_requests = [request]
+        self._search_requests = [_build_search_request()]
         super().__init__(client, iter(self._search_requests))
 
 
@@ -225,10 +233,7 @@ class AllocationStrategies(Enum):
         FixedTargetAllocationStrategy,
         _CONSERVATIVE_TARGETS,
     )
-    OVERALL_HIGHEST_RATE = (
-        HighestMatchingRateAllocationStrategy,
-        _BASE_REQUEST,
-    )
+    OVERALL_HIGHEST_RATE = (HighestMatchingRateAllocationStrategy,)
 
     def __str__(self):
         """Return the name of the enum to make it more palatable in the CLI help."""

@@ -88,7 +88,8 @@ All configs can be provided as command-line options as well:
 usage: prosper-bot [-h] [-c CLIENT-ID] [--client-secret CLIENT-SECRET] [-u USERNAME]
                    [-p PASSWORD] [-t TOKEN-CACHE] [-m MIN-BID]
                    [-s {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}]
-                   [--target-loan-count TARGET-LOAN-COUNT] [-v] [-d]
+                   [--target-loan-count TARGET-LOAN-COUNT] [--search-for-almost-funded] [-v]
+                   [-d]
 
 All optional program arguments can be provided via configuration file at the following
 locations: '/Users/graham/Library/Application Support/prosper-
@@ -124,6 +125,9 @@ prosper-bot.bot:
   --target-loan-count TARGET-LOAN-COUNT
                         Calculate min bid based on (total account value / target loan
                         count). Overrides min-bid if present; Type: int
+  --search-for-almost-funded
+                        Search for listings with remaining funding <= cash, which allows
+                        bidding when cash is less than $25; Type: bool
 
 prosper-bot.cli:
   -v, --verbose         Prints additional debug messages; Type: bool
