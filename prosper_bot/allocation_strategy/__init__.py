@@ -186,11 +186,11 @@ class FixedTargetAllocationStrategy(AllocationStrategy):
         )
 
         logger.info(
-            f"Pending investments = ${account.pending_investments_primary_market:8.2f}"
+            f"\tPending investments = ${account.pending_investments_primary_market:9.2f}"
         )
         for key, bucket in buckets.items():
             logger.info(
-                f"\t{key:17}= ${bucket.value:8.2f} ({bucket.pct_of_total * 100:6.2f}%) error: {bucket.error_pct * 100:6.3f}%"
+                f"\t{key:19} = ${bucket.value:9.2f} ({bucket.pct_of_total * 100:6.2f}%) error: {bucket.error_pct * 100:6.3f}%"
             )
 
         grade_buckets_sorted_by_error_pct = sorted(

@@ -29,6 +29,7 @@ class TestCli:
                 "--verbose",
                 "--min-bid=30",
                 "--target-loan-count=600",
+                "--search-for-almost-funded",
                 # TODO: the --strategy param is broken :(
                 # "--strategy=CONSERVATIVE",
             ],
@@ -41,7 +42,7 @@ class TestCli:
                 "min-bid": Decimal("30"),
                 "strategy": AllocationStrategies.AGGRESSIVE,
                 "target-loan-count": 600,
-                "search-for-almost-funded": False,
+                "search-for-almost-funded": True,
             }
         )
         assert config._config_dict["prosper-bot"]["cli"] == {
