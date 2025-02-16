@@ -5,14 +5,14 @@
                      [-u USERNAME] [-p PASSWORD] [-t TOKEN-CACHE] [-m MIN-BID]
                      [-s {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}]
                      [--target-loan-count TARGET-LOAN-COUNT]
-                     [--search-for-almost-funded] [-v] [-d]
+                     [--search-for-almost-funded] [-v] [-d] [--single-run]
   
   All optional program arguments can be provided via configuration file at the
   following locations: '/config_dir/dir/prosper-
   bot/config.{json|yml|yaml|toml}','/cwd/dir/prosper-
   bot.{json|yml|yaml|toml}',/cwd/dir/.pyproject.toml.
   
-  options:
+  optional arguments:
     -h, --help            show this help message and exit
   
   prosper-api.credentials:
@@ -53,6 +53,8 @@
   prosper-bot.cli:
     -v, --verbose         Prints additional debug messages; Type: bool
     -d, --dry-run         Run the loop but don't actually place any orders;
+                          Type: bool
+    --single-run          Runs the loop only once, or until cash is exhausted;
                           Type: bool
   
   '''

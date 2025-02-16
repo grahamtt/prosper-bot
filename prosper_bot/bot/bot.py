@@ -11,7 +11,12 @@ from prosper_shared.omni_config import ConfigKey, config_schema
 from schema import Optional as SchemaOptional
 
 from prosper_bot.allocation_strategy import AllocationStrategies, set_search_param
-from prosper_bot.cli import DRY_RUN_CONFIG, VERBOSE_CONFIG, build_config
+from prosper_bot.cli import (
+    DRY_RUN_CONFIG,
+    SINGLE_RUN_CONFIG,
+    VERBOSE_CONFIG,
+    build_config,
+)
 from prosper_bot.util import round_down_to_nearest_cent
 
 logger = logging.getLogger(__file__)
@@ -75,6 +80,7 @@ class Bot:
         if self.config.get_as_bool(VERBOSE_CONFIG):
             logging.root.setLevel(logging.DEBUG)
             logger.setLevel(logging.DEBUG)
+        self.single_run = self.config.get_as_bool(SINGLE_RUN_CONFIG)
 
         self.client = Client(config=self.config)
         self.dry_run = self.config.get_as_bool(DRY_RUN_CONFIG)
@@ -97,6 +103,9 @@ class Bot:
                     f"Caught exception running bot loop: {e}. Continuing after {humanize.naturaldelta(sleep_time_delta)}..."
                 )
                 logger.debug("", exc_info=e)
+
+            if (not cash or Decimal(cash) < self.min_bid) and self.single_run:
+                break
 
             sleep(sleep_time_delta.total_seconds())
 
@@ -145,7 +154,10 @@ class Bot:
             sleep_time_delta = timedelta(seconds=5)
         else:
             sleep_time_delta = POLL_TIME
-            logger.info(f"Starting polling once {humanize.naturaldelta(POLL_TIME)}...")
+            if not self.single_run:
+                logger.info(
+                    f"Starting polling once {humanize.naturaldelta(POLL_TIME)}..."
+                )
 
         return cash, sleep_time_delta
 

@@ -64,9 +64,9 @@ class TestUtils:
 
         assert printer.mock_calls == [
             mocker.call("### Title ###"),
-            mocker.call("a: ################################# 33.33%"),
-            mocker.call("b: ################################################## 50.00%"),
-            mocker.call("c: ################ 16.67%"),
+            mocker.call("a: |--------------------------| 33.33%"),
+            mocker.call("b: |----------------------------------------| 50.00%"),
+            mocker.call("c: |-------------| 16.67%"),
         ]
 
     def test_print_histogram_not_percent(self, mocker):
@@ -77,9 +77,9 @@ class TestUtils:
 
         assert printer.mock_calls == [
             mocker.call("### Title ###"),
-            mocker.call("a: ###### 6.00"),
-            mocker.call("b: ######### 9.00"),
-            mocker.call("c: ### 3.00"),
+            mocker.call("a: |--------------------------| 6.00"),
+            mocker.call("b: |----------------------------------------| 9.00"),
+            mocker.call("c: |-------------| 3.00"),
         ]
 
     def test_ppprint(self):

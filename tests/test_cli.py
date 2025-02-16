@@ -27,6 +27,7 @@ class TestCli:
                 "--token-cache=fake-token-cache",
                 "--dry-run",
                 "--verbose",
+                "--single-run",
                 "--min-bid=30",
                 "--target-loan-count=600",
                 "--search-for-almost-funded",
@@ -48,6 +49,7 @@ class TestCli:
         assert config._config_dict["prosper-bot"]["cli"] == {
             "dry-run": True,
             "verbose": True,
+            "single-run": True,
         }
         assert config._config_dict["prosper-api"] == {
             "auth": {"token-cache": "fake-token-cache"},

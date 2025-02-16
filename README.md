@@ -80,6 +80,11 @@ description = "Prints additional debug messages."
 type = "bool"
 optional = false
 description = "Run the loop but don't actually place any orders."
+
+["prosper-bot.cli.single-run"]
+type = "bool"
+optional = false
+description = "Runs the loop only once, or until cash is exhausted"
 ```
 
 All configs can be provided as command-line options as well:
@@ -89,14 +94,14 @@ usage: prosper-bot [-h] [-c CLIENT-ID] [--client-secret CLIENT-SECRET] [-u USERN
                    [-p PASSWORD] [-t TOKEN-CACHE] [-m MIN-BID]
                    [-s {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}]
                    [--target-loan-count TARGET-LOAN-COUNT] [--search-for-almost-funded] [-v]
-                   [-d]
+                   [-d] [--single-run]
 
 All optional program arguments can be provided via configuration file at the following
 locations: '/Users/graham/Library/Application Support/prosper-
 bot/config.{json|yml|yaml|toml}','/Users/graham/Programming/prosper-bot/prosper-
 bot.{json|yml|yaml|toml}',/Users/graham/Programming/prosper-bot/.pyproject.toml.
 
-options:
+optional arguments:
   -h, --help            show this help message and exit
 
 prosper-api.credentials:
@@ -132,6 +137,7 @@ prosper-bot.bot:
 prosper-bot.cli:
   -v, --verbose         Prints additional debug messages; Type: bool
   -d, --dry-run         Run the loop but don't actually place any orders; Type: bool
+  --single-run          Runs the loop only once, or until cash is exhausted; Type: bool
 ```
 
 ## Feedback

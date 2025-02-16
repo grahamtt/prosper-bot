@@ -1,4 +1,5 @@
 import logging
+import shutil
 from decimal import Decimal
 from numbers import Number
 from typing import Any, Callable, Dict, Hashable, Iterable
@@ -95,9 +96,10 @@ def print_histogram(
     total = sum(histogram.values())
     printer(f"### {title} ###")
     for key, val in histogram.items():
-        scaled_val = val / total * 100 if percent else val
+        scaled_val = val / total * shutil.get_terminal_size()[0]
+        percent_val = val / total * 100
         printer(
-            f"{key:{max_len}}: {'#'*int(scaled_val)} {scaled_val:3.2f}{'%' if percent else ''}"
+            f"{key:{max_len}}: |{'-'*int(scaled_val)}| {percent_val if percent else val:3.2f}{'%' if percent else ''}"
         )
 
 

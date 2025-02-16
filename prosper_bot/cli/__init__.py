@@ -2,6 +2,7 @@ from prosper_shared.omni_config import Config, ConfigKey, input_schema
 
 DRY_RUN_CONFIG = "prosper-bot.cli.dry-run"
 VERBOSE_CONFIG = "prosper-bot.cli.verbose"
+SINGLE_RUN_CONFIG = "prosper-bot.cli.single-run"
 APP_NAME = "prosper-bot"
 
 
@@ -16,6 +17,11 @@ def _schema():
                 ConfigKey(
                     "dry-run",
                     "Run the loop but don't actually place any orders.",
+                    default=False,
+                ): bool,
+                ConfigKey(
+                    "single-run",
+                    "Runs the loop only once, or until cash is exhausted",
                     default=False,
                 ): bool,
             }
