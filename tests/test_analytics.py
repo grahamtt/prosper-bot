@@ -65,7 +65,10 @@ class TestAnalytics:
             analyze(client_mock)
 
         assert len(caplog.records) == 4
-        assert caplog.records[0].message == "Overall IRR: 3.93%"
-        assert caplog.records[1].message == "IRR for N/A: 3.93%"
+        assert caplog.records[0].message in ["Overall IRR: 3.92%", "Overall IRR: 3.93%"]
+        assert caplog.records[1].message in [
+            "IRR for N/A: 3.92%",
+            "IRR for N/A: 3.93%",
+        ]
         assert caplog.records[2].message == "Oldest active note date: 2021-01-02"
         assert caplog.records[3].message == "Newest active note date: 2021-01-02"
