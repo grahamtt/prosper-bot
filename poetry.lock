@@ -1466,13 +1466,13 @@ files = [
 
 [[package]]
 name = "prosper-api"
-version = "0.11.0"
+version = "0.11.2"
 description = "Python trading library for Prosper.com"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "prosper_api-0.11.0-py3-none-any.whl", hash = "sha256:b551f591c7f7b4382c4d251ae99f1edc07ab7e90ff99ef9c0a177fd3282379a4"},
-    {file = "prosper_api-0.11.0.tar.gz", hash = "sha256:f205c09542651d84a2c9ac70e677445bb013084f842995036f5e5c1c6b31dc49"},
+    {file = "prosper_api-0.11.2-py3-none-any.whl", hash = "sha256:6ce26e5c186cfde38628669c72043d90cd089c271703c05a39a8a83432ed5ce8"},
+    {file = "prosper_api-0.11.2.tar.gz", hash = "sha256:08f7dd04ebc6d99ff1b906083aef59523807daef2c6f5247a469d1321575734a"},
 ]
 
 [package.dependencies]

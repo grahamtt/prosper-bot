@@ -91,10 +91,10 @@ All configs can be provided as command-line options as well:
 
 ```
 usage: prosper-bot [-h] [-c CLIENT-ID] [--client-secret CLIENT-SECRET] [-u USERNAME]
-                   [-p PASSWORD] [-t TOKEN-CACHE] [-m MIN-BID]
+                   [-p PASSWORD] [-t TOKEN-CACHE] [-i IRR-START-DATE] [-m MIN-BID]
                    [-s {AGGRESSIVE,CONSERVATIVE,OVERALL_HIGHEST_RATE}]
-                   [--target-loan-count TARGET-LOAN-COUNT] [--search-for-almost-funded] [-v]
-                   [-d] [--single-run]
+                   [--target-loan-count TARGET-LOAN-COUNT] [--search-for-almost-funded] [-a]
+                   [-v] [-d] [--single-run]
 
 All optional program arguments can be provided via configuration file at the following
 locations: '/Users/graham/Library/Application Support/prosper-
@@ -121,6 +121,10 @@ prosper-api.auth:
                         The filesystem location where the auth token will be cached; Type:
                         str; Default: /Users/graham/Library/Caches/prosper-api/token-cache
 
+prosper-bot.analytics:
+  -i IRR-START-DATE, --irr-start-date IRR-START-DATE
+                        Start date for IRR calculation; Type: str
+
 prosper-bot.bot:
   -m MIN-BID, --min-bid MIN-BID
                         Minimum amount of a loan to purchase; Type: Decimal; Default: 25.00
@@ -133,6 +137,7 @@ prosper-bot.bot:
   --search-for-almost-funded
                         Search for listings with remaining funding <= cash, which allows
                         bidding when cash is less than $25; Type: bool
+  -a, --analytics       Run analytics on the account; Type: bool
 
 prosper-bot.cli:
   -v, --verbose         Prints additional debug messages; Type: bool

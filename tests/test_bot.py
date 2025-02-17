@@ -74,7 +74,8 @@ class TestBot:
 
     @pytest.mark.timeout("5")
     def test_run_when_exception(self, mocker, client_mock):
-        botty = Bot(Config({}))
+        analyze_mock = mocker.patch("prosper_bot.bot.bot.analyze")
+        botty = Bot(Config({"prosper-bot": {"bot": {"analytics": True}}}))
         do_run_mock = mocker.spy(botty, "_do_run")
         mocker.patch.object(bot, "POLL_TIME", timedelta(milliseconds=10))
         do_run_mock.side_effect = [
@@ -85,6 +86,7 @@ class TestBot:
         botty.run()
 
         do_run_mock.assert_has_calls([mocker.call(None), mocker.call(None)])
+        analyze_mock.assert_called_once()
 
     @pytest.mark.parametrize(
         [
@@ -96,6 +98,7 @@ class TestBot:
             "expect_matching_listings",
         ],
         [
+            ({}, {"analytics": True}, None, Decimal(0), None, None),
             ({}, {}, Decimal("111.1111"), Decimal("111.1111"), None, None),
             ({}, {}, None, Decimal("111.1111"), Decimal("36.11"), True),
             ({}, {}, None, Decimal("24.99"), None, None),

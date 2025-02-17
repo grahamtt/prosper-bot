@@ -11,6 +11,7 @@ from prosper_shared.omni_config import ConfigKey, config_schema
 from schema import Optional as SchemaOptional
 
 from prosper_bot.allocation_strategy import AllocationStrategies, set_search_param
+from prosper_bot.analytics import analyze
 from prosper_bot.cli import (
     DRY_RUN_CONFIG,
     SINGLE_RUN_CONFIG,
@@ -62,6 +63,13 @@ def _schema():
                         default=False,
                     )
                 ): bool,
+                SchemaOptional(
+                    ConfigKey(
+                        "analytics",
+                        "Run analytics on the account.",
+                        default=False,
+                    )
+                ): bool,
             }
         }
     }
@@ -87,11 +95,16 @@ class Bot:
         self.min_bid = self.config.get_as_decimal(MIN_BID_CONFIG, Decimal(25.00))
         self.target_loan_count = self.config.get(TARGET_LOAN_COUNT_CONFIG)
         self.strategy = self.config.get_as_enum(STRATEGY_CONFIG, AllocationStrategies)
+        self.analytics = self.config.get_as_bool("prosper-bot.bot.analytics")
 
     def run(self):
         """Main loop for the trading bot."""
         sleep_time_delta = POLL_TIME
         cash = None
+
+        if self.analytics:
+            analyze(self.client)
+
         while True:
             try:
                 cash, sleep_time_delta = self._do_run(cash)
