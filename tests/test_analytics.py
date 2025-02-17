@@ -11,11 +11,7 @@ class TestAnalytics:
     def client_mock(self, mocker):
         return mocker.patch("prosper_bot.bot.bot.Client")
 
-    @pytest.fixture
-    def logger_mock(self, mocker):
-        return mocker.patch("logging.getLogger")
-
-    def test_analytics(self, client_mock, logger_mock):
+    def test_analytics(self, client_mock, caplog):
         client_mock._config.get.return_value = None
         client_mock.list_notes.return_value = ListNotesResponse(
             result=[
@@ -65,13 +61,11 @@ class TestAnalytics:
             total_count=1,
         )
 
-        analyze(client_mock)
+        with caplog.at_level("INFO"):
+            analyze(client_mock)
 
-        assert logger_mock.return_value.info.called_with(
-            [
-                "Overall IRR: 0%",
-                "IRR for N/A: 0%",
-                "Oldest active note date: 2021-01-02",
-                "Newest active note date: 2021-01-02",
-            ]
-        )
+        assert len(caplog.records) == 4
+        assert caplog.records[0].message == "Overall IRR: 3.93%"
+        assert caplog.records[1].message == "IRR for N/A: 3.93%"
+        assert caplog.records[2].message == "Oldest active note date: 2021-01-02"
+        assert caplog.records[3].message == "Newest active note date: 2021-01-02"
