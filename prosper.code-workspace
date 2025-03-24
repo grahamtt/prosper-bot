@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"name": "prosper-shared",
+			"path": "../prosper-shared"
+		},
+		{
+			"name": "prosper-api",
+			"path": "../prosper-api"
+		},
+		{
+			"name": "prosper-analyze",
+			"path": "../prosper-analyze"
+		},
+		{
+			"name": "prosper-bot",
+			"path": "."
+		}
+	]
+}
